@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/app.ts',
+  entry: './src/index.ts',
   mode: "development",
   devtool: 'inline-source-map',
   devServer: {
@@ -20,11 +20,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true
-  },
-  optimization: {
-    runtimeChunk: 'single'
+  }, optimization: {
+    runtimeChunk : 'single'
   }
 };
