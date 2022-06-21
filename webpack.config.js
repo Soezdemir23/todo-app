@@ -4,6 +4,9 @@ module.exports = {
   entry: './src/app.ts',
   mode: "development",
   devtool: 'inline-source-map',
+  devServer: {
+    static: './dist',
+  },
   module: {
     rules: [
       {
@@ -19,5 +22,9 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true
   },
+  optimization: {
+    runtimeChunk: 'single'
+  }
 };
