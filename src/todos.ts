@@ -4,9 +4,9 @@ export class Todos {
     private _dueDate
     private _priority    
     private _notes
-
     private _checklist
-    constructor(title: string, description: string, dueDate: Date, priority: number, notes: string = "", checklist: any) {
+
+    constructor(title: string, description: string, dueDate: string, priority: number, notes?: string|undefined, checklist?: any) {
         this._title = title;
         this._description = description
         this._dueDate = dueDate
@@ -43,5 +43,15 @@ export class Todos {
     }
     public set notes(value) {
         this._notes = value
+    }
+    public get checklist() {
+        return this._checklist
+    }
+    public set checklist(value) {
+        this._checklist = value
+    }
+
+    public info() {
+        return 
     }
 }
