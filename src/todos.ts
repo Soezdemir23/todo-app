@@ -1,4 +1,4 @@
-export class Todos {
+export class Todo {
     private _title
     private _description
     private _dueDate
@@ -6,7 +6,7 @@ export class Todos {
     private _notes
     private _checklist
 
-    constructor(title: string, description: string, dueDate: string, priority: number, notes?: string|undefined, checklist?: any) {
+    constructor(title: string, description: string, dueDate: string, priority: number,  checklist: any = {}, notes?: string|undefined) {
         this._title = title;
         this._description = description
         this._dueDate = dueDate
@@ -52,6 +52,13 @@ export class Todos {
     }
 
     public info() {
-        return 
+        return {
+            "title": this.title,
+            "description": this.description,
+            "due date": this.dueDate,
+            "priority": this.priority,
+            "notes": this.notes,
+            "checklist": {}
+        }
     }
 }

@@ -1,4 +1,5 @@
 const path = require('path');
+const HTMLWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/index.ts',
@@ -16,6 +17,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HTMLWebpackPlugin({
+      title: "Todo",
+      template: "src/templates/index.html"
+    })
+  ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
