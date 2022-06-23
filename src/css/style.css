@@ -1,0 +1,19 @@
+@import url("./_normalize.scss");
+body {
+  display: flex;
+}
+
+#lists-container {
+  background-color: #f3f3f3;
+}
+
+#tasks-container {
+  background-color: #687ccc;
+  flex-grow: 1;
+}
+
+#task-customization {
+  background-color: #f3f3f3;
+}
+
+/*# sourceMappingURL=style.css.map */

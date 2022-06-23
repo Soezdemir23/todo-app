@@ -2,11 +2,11 @@ export class Todo {
     private _title
     private _description
     private _dueDate
-    private _priority    
+    private _priority
     private _notes
     private _checklist
-
-    constructor(title: string, description: string, dueDate: string, priority: number,  checklist: any = {}, notes?: string|undefined) {
+    
+    constructor(title: string, description: string="", dueDate: string ="", priority: number = 0,  checklist: any = {}, notes?: string|undefined) {
         this._title = title;
         this._description = description
         this._dueDate = dueDate

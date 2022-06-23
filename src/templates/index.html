@@ -6,8 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="main.bundle.js" defer></script>
+    
 </head>
 <body>
+    <!--Settings and where you can see your lists, if screen is too small, whooshes from the left and puts
+        the main screen in the background, just slightly-->
+    <section id="lists-container">
+        <!--sticky header-->
+        <header>
+            <!--Hamburger to close-->
+            <div><button type="button">close</button></div>
+            <h1>Welcome User!</h1>
+        </header>
+        <section>
+            <!-- tasks and projects-->
+            <div id="default-projects-container">
+                <ul>
+                    <li>My Day</li>
+                    <li>Soon Due</li>
+                    <li>Planned</li>
+                    <li>All Tasks</li>
+                </ul>
+            </div>
+            <!--You can add your current tasks into projects-->
+            <div id="custom-projects-container">
+                
+            </div>
+        </section>
+        <!--sticky footer-->
+        <footer>
+            <div><img src="" alt="plus" srcset=""><p>New List</p></div>
+            
+        </footer>
+    </section>
     
+    <!--Main menu, where the user's tasks are shown, depending what they looked for-->
+    <section id="tasks-container">
+        <!--sticky header, tells you about your day, gives you access to the left -->
+        <header>
+            <!--Hamburger logo-->
+            <button type="button">Menu</button>
+            <div>
+                <h2>Current List name</h2>
+                <!--Submenu for any Project you create, except "my day"-->
+                <button type="button">List Menu</button>
+            </div>
+        </header>
+        <!--If any of the tasks are clicked, create a menu on the right what you would like to change-->
+        <section>
+            <div id="not-done-tasks-container">
+                
+                <ul id="not-done">
+                    <li id="task-child">Task1</li>
+                    <li id="task-child">Task2</li>
+                    <li id="task-child">Task3</li>
+                </ul>
+            </div>
+            
+            <ul id="done">
+                <li>Task 0</li>
+                <li>Task -1</li>
+                <li>Task -2</li>
+            </ul>
+        </section>
+        <!--The sticky footer -->
+        <footer><img alt="plus">Add task</footer>
+    </section>
+    <!--This is the settings for each task-->
+    <section id="task-customization">
+        <!-- click on the radio button, change the title of the task, add subtasks-->
+        <section id="task-header">
+            <div><button type="button" id="check-task">check task<button><h4>Do this</h4></div>           
+            <div><button type="button" id="add-subtask">add Task</button><p>Input subtask name</p></div>
+        </section>
+
+        <section id="add-to-my-day-container">
+            <button type="button"> Add to My Day</button>
+        </section>
+
+        <section>
+            <div>
+                <button>Remind me</button>
+                <p>Remind me</p>
+            </div>
+            <div>
+                <button>Add due Date</button>
+                <p>Add due Date</p>
+            </div>
+            <div>
+                <button>Repeat</button>
+                <p>Repeat</p>
+            </div>
+        </section>
+
+        <section>
+            <div><button type="button">Add priority</button>
+            </div>
+        </section>
+        
+    </section>
 </body>
 </html>

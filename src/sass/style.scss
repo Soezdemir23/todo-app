@@ -1,0 +1,24 @@
+@import url('./_normalize.scss');
+
+// in general, the whole app is flexed
+body {
+    display: flex ;
+}
+
+#lists-container {
+    background-color: #f3f3f3;
+}
+
+#tasks-container{
+    background-color: #687ccc;
+    flex-grow: 1;
+}
+
+#task-customization {
+    background-color: #f3f3f3;
+}
+
+
+@media (min-width: 300px) {
+    
+}
