@@ -14,7 +14,7 @@
     <section id="lists-container">
         <!--sticky header-->
         <header>
-            <!--Hamburger to close-->
+            <!--Hamburger to close, when screen is smaller-->
             <div><button type="button">close</button></div>
             <h1>Welcome User!</h1>
         </header>
@@ -22,21 +22,23 @@
             <!-- tasks and projects-->
             <div id="default-projects-container">
                 <ul>
-                    <li>My Day</li>
-                    <li>Soon Due</li>
-                    <li>Planned</li>
-                    <li>All Tasks</li>
+                    <li><img id="my-day">My Day</li>
+                    <li><img id="soon-due">Soon Due</li>
+                    <li><img id="planned">Planned</li>
+                    <li><img id="all-tasks">All Tasks</li>
                 </ul>
             </div>
             <!--You can add your current tasks into projects-->
             <div id="custom-projects-container">
-                
+                <ul>
+                    <li>Project</li>
+       
+                </ul>
             </div>
         </section>
         <!--sticky footer-->
         <footer>
-            <div><img src="" alt="plus" srcset=""><p>New List</p></div>
-            
+        <img id="new-list"><p>New List</p>
         </footer>
     </section>
     
@@ -44,7 +46,7 @@
     <section id="tasks-container">
         <!--sticky header, tells you about your day, gives you access to the left -->
         <header>
-            <!--Hamburger logo-->
+            <!--Hamburger logo, when screen is smaller-->
             <button type="button">Menu</button>
             <div>
                 <h2>Current List name</h2>
@@ -70,40 +72,68 @@
             </ul>
         </section>
         <!--The sticky footer -->
-        <footer><img alt="plus">Add task</footer>
+        <footer>
+            <div><img id="add-task"><input type="textö" name="task-add" id="task-add" placeholder="Add Task"></div>
+        </footer>
     </section>
     <!--This is the settings for each task-->
     <section id="task-customization">
         <!-- click on the radio button, change the title of the task, add subtasks-->
         <section id="task-header">
-            <div><button type="button" id="check-task">check task<button><h4>Do this</h4></div>           
-            <div><button type="button" id="add-subtask">add Task</button><p>Input subtask name</p></div>
-        </section>
+            <!--check task, clickable, hovers as done, right side is name of the task-->
+            <div id="task-header-one">
+                <button>+</button>
 
-        <section id="add-to-my-day-container">
-            <button type="button"> Add to My Day</button>
-        </section>
-
-        <section>
+                <input type="text" name="task-name" id="task-name" value="Task">
+                
+            </div>
+            <!--left side is a plus. right side is an input with -->           
             <div>
-                <button>Remind me</button>
+                <button>+</button>
+                <input type="text" name="subtask" id="subtask" value="subtask">
+            </div>
+        </section>
+        <!--Add to my day container, nothing important to do here-->
+        <section id="rmd-container">
+            <div>
+                
+                <button type="button">+</button>
+                <p>Add to my day</p>
+            </div>
+        </section>
+        <!--this can and should stay the way they are-->
+        <section id="rmd-container">
+            <div>
+                <button type="button">+</button>
                 <p>Remind me</p>
             </div>
             <div>
-                <button>Add due Date</button>
+                <button type="button">+</button>
                 <p>Add due Date</p>
             </div>
             <div>
-                <button>Repeat</button>
+                <button type="button">+</button>
                 <p>Repeat</p>
             </div>
         </section>
-
+        <!--Priority and Notes-->
         <section>
-            <div><button type="button">Add priority</button>
+            <!--Priority-->
+            <div>
+                <label for="priority">Priority</label>
+                <select name="priority" id="priority">
+                    <option value="low">low</option>
+                    <option value="medium">medium</option>
+                    <option value="high">high</option>
+                    <option value="urgent">urgent</option>
+                </select>
+            </div>
+            <!--Notes-->
+            <div>
+                <label for="notes">Notes</label>
+                <textarea name="notes" id="notes" cols="20" rows="5"></textarea>
             </div>
         </section>
-        
     </section>
 </body>
 </html>

@@ -18,5 +18,4 @@ export function hookToElements(){
     newProjectElement.src = Project
     let newTaskElement = document.getElementById("add-task") as HTMLImageElement
     newTaskElement.src =  NewTask
-    
 }
