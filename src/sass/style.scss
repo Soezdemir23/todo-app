@@ -1,24 +1,134 @@
 @import url('./_normalize.scss');
+@font-face {
+    font-family: 'NotoSans';
+    src: url('../font/NotoSans-Light.ttf');
 
+}
 // in general, the whole app is flexed
 body {
+    height: 100vh;
     display: flex ;
+    font-family: 'NotoSans', sans-serif;
 }
 
+ul {
+    list-style-type: none;
+}
+
+
+
+
 #lists-container {
+    display: flex;
+    flex-direction: column;
     background-color: #f3f3f3;
+    min-width: 280px;
+    section {
+        overflow:auto;
+        flex-grow: 1;
+    }
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        li {
+            position: relative;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            &:hover {
+                background-color: #e0e0e0;
+            }
+        }
+
+    }
+    img {
+        padding-right: 1rem;
+        width: 15px;
+    }
+
+    #default-projects-container{
+        border-bottom: #e0e0e0 2px solid;
+    }
+
+    footer {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        img {
+            position: relative;
+            left: 10px;
+            top: 1px;
+            &hover {
+                background-color: #e0e0e0;
+            }
+        }
+
+    }
+
 }
 
 #tasks-container{
     background-color: #687ccc;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;    
+    header {
+        h2 {
+            color: #fff;
+        }
+    }
+    section {
+        flex-grow: 1;
+    }
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    li {
+        background-color: #f3f3f3;
+
+        position: relative;
+        right: 30px;
+        &active{
+            background-color: #ffffff;
+
+        }
+    }
+
+    footer {
+        background-color: #e0e0e0;
+        div {
+            display: flex;
+            img {
+                width: 25px;
+            }
+        }
+    }
+
 }
+
 
 #task-customization {
-    background-color: #f3f3f3;
+    section {
+        margin: 2px 0;
+    }
+    #rmd-container {
+        display: flex;
+        flex-direction: column;
+        div {
+            display: inline;
+            margin-bottom: 2px 0;
+            p{
+                display: inline;
+            }
+        }
+    }
+
+    text-area {
+        resize: none;
+    }
 }
 
 
-@media (min-width: 300px) {
-    
-}
