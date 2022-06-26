@@ -13,12 +13,12 @@
         the main screen in the background, just slightly-->
     <section id="lists-container">
         <!--sticky header-->
-        <header>
+        <div class="header">
             <!--Hamburger to close, when screen is smaller-->
-            <div><button type="button">close</button></div>
+            <div><button type="button" onclick="closeMenu()">close</button></div>
             <h1>Welcome User!</h1>
-        </header>
-        <section>
+    </div>
+        <div class="section">
             <!-- tasks and projects-->
             <div id="default-projects-container">
                 <ul>
@@ -32,108 +32,89 @@
             <div id="custom-projects-container">
                 <ul>
                     <li>Project</li>
-       
                 </ul>
             </div>
-        </section>
+        </div>
         <!--sticky footer-->
-        <footer>
+        <div class="footer">
         <img id="new-list"><p>New List</p>
-        </footer>
+        </div>
     </section>
     
     <!--Main menu, where the user's tasks are shown, depending what they looked for-->
     <section id="tasks-container">
         <!--sticky header, tells you about your day, gives you access to the left -->
-        <header>
+        <div class="header">
             <!--Hamburger logo, when screen is smaller-->
-            <button type="button">Menu</button>
+            <button type="button" onclick="openMenu()">Menu</button>
             <div>
                 <h2>Current List name</h2>
-                <!--Submenu for any Project you create, except "my day"-->
-                <button type="button">List Menu</button>
             </div>
-        </header>
+        </div>
         <!--If any of the tasks are clicked, create a menu on the right what you would like to change-->
-        <section>
+        <div class="section">
             <div id="not-done-tasks-container">
                 
                 <ul id="not-done">
-                    <li id="task-child">Task1</li>
-                    <li id="task-child">Task2</li>
-                    <li id="task-child">Task3</li>
+                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task1</p></li>
+                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task2</p></li>
+                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task3</p></li>
                 </ul>
             </div>
             
             <ul id="done">
-                <li>Task 0</li>
-                <li>Task -1</li>
-                <li>Task -2</li>
+                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
+                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
+                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
             </ul>
-        </section>
+        </div>
         <!--The sticky footer -->
-        <footer>
-            <div><img id="add-task"><input type="text" name="task-add" id="task-add" placeholder="Add Task"></div>
-        </footer>
+        <div class="footer">
+            <div id="add-task-container">
+                <img id="add-task"><input type="text" name="task-add" id="task-add" placeholder="Add Task">
+            </div>
+        </div>
     </section>
+    <section>
     <!--This is the settings for each task-->
-    <section id="task-customization">
+    <form id="task-customization">
         <!-- click on the radio button, change the title of the task, add subtasks-->
-        <section id="task-header">
-            <!--check task, clickable, hovers as done, right side is name of the task-->
-            <div id="task-header-one">
-                <button>+</button>
+        <div id="task-customization-header">
+            <div>
+                <input type="checkbox" name="task-done" id="task-done">
+                <input type="text" name="task-name" id="task-name">
+            </div>
+            <ul>
+                <li>
+                    <button type="button" onclick="add-subtask()">add</button>
+                    <input type="text" name="subtask" id="subtask">
+                </li>
+            </ul>
+        </div>
+        
 
-                <input type="text" name="task-name" id="task-name" value="Task">
-                
-            </div>
-            <!--left side is a plus. right side is an input with -->           
-            <div>
-                <button>+</button>
-                <input type="text" name="subtask" id="subtask" value="subtask">
-            </div>
-        </section>
-        <!--Add to my day container, nothing important to do here-->
-        <section id="rmd-container">
-            <div>
-                
-                <button type="button">+</button>
-                <p>Add to my day</p>
-            </div>
-        </section>
-        <!--this can and should stay the way they are-->
-        <section id="rmd-container">
-            <div>
-                <button type="button">+</button>
-                <p>Remind me</p>
-            </div>
-            <div>
-                <button type="button">+</button>
-                <p>Add due Date</p>
-            </div>
-            <div>
-                <button type="button">+</button>
-                <p>Repeat</p>
-            </div>
-        </section>
-        <!--Priority and Notes-->
-        <section>
-            <!--Priority-->
-            <div>
-                <label for="priority">Priority</label>
-                <select name="priority" id="priority">
-                    <option value="low">low</option>
-                    <option value="medium">medium</option>
-                    <option value="high">high</option>
-                    <option value="urgent">urgent</option>
-                </select>
-            </div>
-            <!--Notes-->
-            <div>
-                <label for="notes">Notes</label>
-                <textarea name="notes" id="notes" cols="20" rows="5"></textarea>
-            </div>
-        </section>
+        <div id="add-to-my-day">
+            <button type="button" onclick="addToMyDay()">Add To my Day</button>
+        </div>
+        <div id="rmd-container">
+            <button type="button" onclick="remindMe()">Remind me</button>
+            <button type="button" onclick="addDueDate()">Add due date</button>
+            <button type="button" onclick="repeat()">Repeat</button>
+            <button type="button" onclick="addToProject()">Add to project</button>
+        </div>
+        <div>
+            <label for="priority-select">Choose a priority</label>
+            <select name="priority" id="priority-select">
+                <option value="">Choose an option</option>
+                <option value="low-1">Low 1</option>
+                <option value="medium-2">Medium 2</option>
+                <option value="high-3">High 3</option>
+                <option value="urgent-4">Urgent 4</option>
+            </select>
+        </div>
+        <div id="notes-container"><label for="notes">Notes</label><textarea name="notes" id="notes" cols=30 rows="5" ></textarea></div>
+        <button type="submit">apply</button>
+    </form>
     </section>
 </body>
 </html>

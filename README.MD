@@ -64,15 +64,17 @@ What should a manager be able to do:
 #### Main Tasks
 
 + List header
+    + Menu button für projects
+    + 
 + Main 
     + To Do tasks
-        + Tasks
+        + Tasks is a list container
+            + contains a data set attribute to 
             + Checkmark for done or not done
             + Name for Task
                 + Clicking it opens the Task Customization 
     + Done tasks
         + is a button that can collapse this submenu
-        
         + Tasks
             + can still be customized and are then moved back if it happens
             + Checkmarks that are done are moved to here
@@ -83,7 +85,7 @@ What should a manager be able to do:
         + check svg inside button if the user wants to
             + hover is pulsing?
                 + https://www.youtube.com/watch?v=PMGCOVfK-8s
-        + 
+        + Simple input text area.
 
 #### Task Customization
 
@@ -93,9 +95,11 @@ What should a manager be able to do:
         + create a new subtask entry for the next subtask
     + into Project
         + take the information from localstorage
-    + Add To My Day
-    + Remind Me
-    + Repeat
+    + rmd
+        + https://linuxhint.com/create-popup-menu-javascript/
+        + Add To My Day 
+        + Remind Me
+        + Repeat
     + Priority
     + Notes
 

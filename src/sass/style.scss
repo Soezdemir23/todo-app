@@ -23,7 +23,7 @@ ul {
     flex-direction: column;
     background-color: #f3f3f3;
     min-width: 280px;
-    section {
+    .section {
         overflow:auto;
         flex-grow: 1;
     }
@@ -51,7 +51,7 @@ ul {
         border-bottom: #e0e0e0 2px solid;
     }
 
-    footer {
+    .footer {
         display: flex;
         align-items: center;
         gap: 5px;
@@ -73,12 +73,12 @@ ul {
     flex-grow: 1;
     display: flex;
     flex-direction: column;    
-    header {
+    .header {
         h2 {
             color: #fff;
         }
     }
-    section {
+    .section {
         flex-grow: 1;
     }
     ul {
@@ -88,22 +88,26 @@ ul {
     }
     li {
         background-color: #f3f3f3;
-
         position: relative;
         right: 30px;
         &active{
             background-color: #ffffff;
-
+        }
+        p {
+            display: inline;
         }
     }
 
-    footer {
-        background-color: #e0e0e0;
+    .footer {
         div {
+            background-color: #e0e0e0;
             display: flex;
+            position: relative;
+            bottom: 15px;
             img {
                 width: 25px;
             }
+            
         }
     }
 
@@ -111,9 +115,15 @@ ul {
 
 
 #task-customization {
-    section {
-        margin: 2px 0;
+    margin: 1rem 1rem;
+
+    #task-customization-header {
+        ul {
+            position: relative;
+            right: 40px;
+        }
     }
+
     #rmd-container {
         display: flex;
         flex-direction: column;
@@ -125,7 +135,11 @@ ul {
             }
         }
     }
-
+    #notes-container {
+        display: flex;
+        flex-direction: column;
+    }
+    
     text-area {
         resize: none;
     }
