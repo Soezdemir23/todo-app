@@ -56,22 +56,22 @@
             <div id="not-done-tasks-container">
                 
                 <ul id="not-done">
-                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task1</p></li>
-                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task2</p></li>
-                    <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task3</p></li>
+                    <li class="task-child"><input type="checkbox" name="task" id="task"><p contenteditable="true">Task1</p></li>
+                    <li class="task-child"><input type="checkbox" name="task" id="task"><p>Task2</p></li>
+                    <li class="task-child"><input type="checkbox" name="task" id="task"><p>Task3</p></li>
                 </ul>
             </div>
             
             <ul id="done">
-                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
-                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
-                <li id="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
+                <li class="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
+                <li class="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
+                <li class="task-child"><input type="checkbox" name="task" id="task"><p>Task 0</p></li>
             </ul>
         </div>
         <!--The sticky footer -->
         <div class="footer">
             <div id="add-task-container">
-                <img id="add-task"><input type="text" name="task-add" id="task-add" placeholder="Add Task" onkeydown="readTask()">
+                <img id="add-task"><input type="text" name="task-add" id="task-add" placeholder="Add Task">
             </div>
         </div>
     </section>

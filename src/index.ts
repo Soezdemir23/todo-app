@@ -11,11 +11,7 @@ let todo = new Todo(
 )
 let dom = new DOMManager();
 dom.hookSVGToElements()
-let result = dom.readTask()
-console.log("Result is: ", result)
-
-
-console.log(todo.info())
+dom.readTask()
 
 let working = new Project("ToDo App")
 working.todos.push(todo)
