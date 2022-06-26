@@ -32,7 +32,6 @@ export class DOMManager {
                 } else {
                     this.addTaskToToDoList()
                     addTaskInput!.value = ""
-                
                 }
             }
         })
