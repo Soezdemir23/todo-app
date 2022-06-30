@@ -90,11 +90,15 @@ ul {
         background-color: #f3f3f3;
         position: relative;
         right: 30px;
+        display: flex;
+        border-radius: 3px;
+        gap: 4px;
         &active{
             background-color: #ffffff;
         }
         p {
             display: inline;
+            cursor: pointer;
         }
     }
 
@@ -110,7 +114,13 @@ ul {
             
         }
     }
-
+    .task-child-done{
+        color: grey;
+        text-decoration: line-through;
+    }
+    .task-child-undone{
+        
+    }
 }
 
 
@@ -146,3 +156,6 @@ ul {
 }
 
 
+.hidden{
+    display: none;
+}

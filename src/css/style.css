@@ -4,6 +4,7 @@
   src: url("../font/NotoSans-Light.ttf");
 }
 body {
+  height: 100vh;
   display: flex;
   font-family: "NotoSans", sans-serif;
 }
@@ -18,7 +19,7 @@ ul {
   background-color: #f3f3f3;
   min-width: 280px;
 }
-#lists-container section {
+#lists-container .section {
   overflow: auto;
   flex-grow: 1;
 }
@@ -43,17 +44,17 @@ ul {
 #lists-container #default-projects-container {
   border-bottom: #e0e0e0 2px solid;
 }
-#lists-container footer {
+#lists-container .footer {
   display: flex;
   align-items: center;
   gap: 5px;
 }
-#lists-container footer img {
+#lists-container .footer img {
   position: relative;
   left: 10px;
   top: 1px;
 }
-#lists-container footer imghover {
+#lists-container .footer imghover {
   background-color: #e0e0e0;
 }
 
@@ -63,10 +64,10 @@ ul {
   display: flex;
   flex-direction: column;
 }
-#tasks-container header h2 {
+#tasks-container .header h2 {
   color: #fff;
 }
-#tasks-container section {
+#tasks-container .section {
   flex-grow: 1;
 }
 #tasks-container ul {
@@ -78,16 +79,35 @@ ul {
   background-color: #f3f3f3;
   position: relative;
   right: 30px;
+  text-align: center;
+  border-radius: 4px;
 }
 #tasks-container liactive {
   background-color: #ffffff;
 }
-#tasks-container footer {
-  background-color: #e0e0e0;
+#tasks-container li p {
+  display: inline;
+  cursor: pointer;
 }
-
-#task-customization section {
-  margin: 2px 0;
+#tasks-container .footer div {
+  background-color: #e0e0e0;
+  display: flex;
+  position: relative;
+  bottom: 15px;
+}
+#tasks-container .footer div img {
+  width: 25px;
+}
+#tasks-container .task-child-done {
+  color: grey;
+  text-decoration: line-through;
+}
+#task-customization {
+  margin: 1rem 1rem;
+}
+#task-customization #task-customization-header ul {
+  position: relative;
+  right: 40px;
 }
 #task-customization #rmd-container {
   display: flex;
@@ -99,6 +119,10 @@ ul {
 }
 #task-customization #rmd-container div p {
   display: inline;
+}
+#task-customization #notes-container {
+  display: flex;
+  flex-direction: column;
 }
 #task-customization text-area {
   resize: none;

@@ -1,4 +1,4 @@
-import { DOMManager } from "./domManager";
+
 import { Todo } from "./todos";
 
 /**
@@ -13,8 +13,38 @@ export class StorageManaging {
         this.localStorage = localstorage
     }
 
-    public insertTaskObjectIntoStorage(Task: Todo) {
-        this.localStorage.setItem("name", JSON.stringify(Task))
+    public insertTaskObjectIntoStorage(taskname:string ,task: Todo) {
+        this.localStorage.setItem(taskname, JSON.stringify(task))
+        
     }
-    
+
+    public populateTasksFromStorage(): Todo[] |void {
+        let taskArray: Todo[] = []
+        if(this.localStorage.length=== 0) return //if the localstorage is empty, return
+        Object.keys(this.localStorage).forEach((keys) => {
+            taskArray.push(JSON.parse(this.localStorage.getItem(keys)!))
+        })
+        return taskArray
+    }
+
+    public changeDone(task:string, bool: boolean) {
+        let todo: Todo = JSON.parse(this.localStorage.getItem(task)!)
+        console.log(todo.done)
+        todo.done = bool
+        this.localStorage.removeItem(task)
+        this.localStorage.setItem(task, JSON.stringify(todo))
+    }
+
+    public getTask(title: string):Todo{
+        return JSON.parse(this.localStorage.getItem(title)!)
+    }
+    public insertSubtask(taskTitle: string, subTask: string) {
+        console.log(taskTitle)
+        let todo: Todo = JSON.parse(this.localStorage.getItem(taskTitle)!)
+        console.log(todo)
+        todo.checklist[subTask] = false
+        this.localStorage.removeItem(taskTitle)
+        this.localStorage.setItem(taskTitle, JSON.stringify(todo))
+        console.log(todo.checklist)
+    }
 }
