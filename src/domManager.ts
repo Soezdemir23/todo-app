@@ -12,7 +12,8 @@ import { Todo } from './todos'
  * use later for the TaskManager.
  */
 export class DOMManager {
-    private task = ""
+    //private task = ""
+    private done = false
     storageManager: StorageManaging
 
     constructor(storageManager: StorageManaging) {
@@ -34,21 +35,21 @@ export class DOMManager {
         newTaskElement.src = NewTask
     }
     /**
-     * Listens to input in the task menu, upon entering "Enter" it checks if the v
+     * Listens to input in the task menu, upon entering "Enter".
      */
     readTaskFromDOM() {
         let addTaskInput = document.getElementById("add-task-container")?.querySelector("input")
         addTaskInput?.addEventListener("keypress", (ev: KeyboardEvent) => {
             if (ev.key === "Enter") {
-                this.task = addTaskInput!.value
-                console.log(this.task)
-                if (this.task.length < 1) {
+                if(addTaskInput?.value.length === undefined) return
+                if (addTaskInput?.value.length < 1) {
                     return
                 } else {
-                    this.addTaskToToDoListDOM(this.task, "not-done")
-                    let newTask = new Todo(`${this.task}`)
-                    this.storageManager.insertTaskObjectIntoStorage(this.task, newTask)
+                    this.addTaskToToDoListDOM(addTaskInput.value, "not-done")
+                    let newTask = new Todo(`${addTaskInput.value}`)
+                    this.storageManager.insertTaskObjectIntoStorage(addTaskInput.value, newTask)
                     addTaskInput!.value = ""
+
                 }
             }
         })
@@ -59,68 +60,66 @@ export class DOMManager {
         let taskContainer = document.getElementById(`${whichContainer}`)
         let newToDoList = document.createElement("li")
         newToDoList.dataset.name = `${task}`
-        newToDoList.innerHTML = 
-        `<button data-name="${task}" >+</button>${task}
+        newToDoList.innerHTML =
+            `<button data-name="${task}" >+</button>${task}
         `
         newToDoList.classList.add("task-child-undone")
-        
-        /* let taskButton = document.createElement("button")
-        taskButton.textContent="change"
-        newToDoList.appendChild(taskButton)
-        
-        newToDoList.textContent = `${task}`*/ 
         taskContainer?.insertBefore(newToDoList, taskContainer.firstChild)
     }
 
-    repopulateTasksListDOM(){
+    repopulateTasksListDOM() {
         let todos = this.storageManager.populateTasksFromStorage()
         if (todos === undefined) return
         else {
             todos.forEach(todo => {
                 if (todo.done === false) {
-                    this.addTaskToToDoListDOM(todo.title, "not-done")            
+                    this.addTaskToToDoListDOM(todo.title, "not-done")
                 } else {
-                    this.addTaskToToDoListDOM(todo.title,"done")
+                    this.addTaskToToDoListDOM(todo.title, "done")
                 }
             })
         }
     }
 
-    listContext(){
+    listContext() {
         let taskChildrenParent = document.getElementById("tasks-list-container")
-        taskChildrenParent?.addEventListener("click", (ev:MouseEvent) => {
+        taskChildrenParent?.addEventListener("click", (ev: MouseEvent) => {
             let nodeTarget = ev.target as Node
             //if the target in this container clicked is a list, we call it either done, or undone
-            if (nodeTarget.nodeName === "LI"){
+            if (nodeTarget.nodeName === "LI") {
                 let target = ev.target as HTMLElement
-                if(target.classList.contains("task-child-undone")){
+                if (target.classList.contains("task-child-undone")) {
                     target.classList.remove("task-child-undone")
                     target.classList.add("task-child-done")
                     this.storageManager.changeDone(target.dataset.name!, true)
                     this.pushToDoneOrUndoneContainer(target, "done")
 
-                }else if (target.classList.contains("task-child-done")){
+                } else if (target.classList.contains("task-child-done")) {
                     target.classList.remove("task-child-done")
                     target.classList.add("task-child-undone")
                     this.storageManager.changeDone(target.dataset.name!, false)
                     this.pushToDoneOrUndoneContainer(target, "not-done")
                 }
-            
-            }// 
-            else if (nodeTarget.nodeName === "BUTTON"){
+
+            }
+            /* If the usesr presses the button, then it should check, 
+            1. if the task is equal to the data-attribute, then check if done is true.
+            Then
+             */
+            else if (nodeTarget.nodeName === "BUTTON") {
                 let target = ev.target as HTMLElement
                 this.populateForm(target.dataset.name!)
+                document.getElementById("task-customization")?.classList.toggle("hidden")
             }
-            
+
         })
     }
 
     pushToDoneOrUndoneContainer(target: HTMLElement, id: string) {
         document.getElementById(id)?.append(target)
     }
-    // not done yet
-    populateForm(taskname:string){
-        document.getElementById("task-customization")?.classList.toggle("hidden")
+    // not done yet, should return a "true" for 
+    populateForm(taskname: string) {
         let todo = this.storageManager.getTask(taskname)
         // get the task title
         let taskTitle = document.getElementById("task-name") as HTMLInputElement
@@ -130,33 +129,38 @@ export class DOMManager {
 
 
         let subTaskList = document.getElementById("subtask-list") as HTMLUListElement
+
         for (let key in todo.checklist) {
             if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
                 let li = document.createElement("li")
                 li.textContent = key
                 console.log(subTaskList.contains(li))
-                if (!subTaskList.contains(li)){
+                if (!subTaskList.contains(li)) {
                     subTaskList.appendChild(li)
                 }
             }
         }
+        console.log("node-lengths:", subTaskList.childNodes.length)
+        console.log("checklist length:", Object.keys(todo.checklist).length);
 
         let date = document.getElementById("due-date") as HTMLInputElement
         console.log(todo.dueDate)
         date.value = todo.dueDate
         let notesElement = document.getElementById("notes") as HTMLTextAreaElement
-        if (todo.notes !== undefined){
+        if (todo.notes !== undefined) {
             notesElement.value = todo.notes
         }
         let priorityElement = document.getElementById("priority-select") as HTMLSelectElement
         priorityElement.value = todo.priority.toString()
+        this.done = true
+
     }
 
-    populateSubtask(){
+    populateSubtask() {
         let subtaskBtn = document.getElementById("add-subtask")
         let subtaskEl = document.getElementById("subtask") as HTMLInputElement
-        subtaskBtn?.addEventListener("click", () =>{
-            if (subtaskEl !=undefined) {
+        subtaskBtn?.addEventListener("click", () => {
+            if (subtaskEl != undefined) {
                 let subTaskList = document.createElement("li")
                 subTaskList.textContent = subtaskEl.value
                 console.log(subTaskList)
