@@ -102,16 +102,11 @@ export class DOMManager {
                 }
 
             }
-            /* If the usesr presses the button, then it should check, 
-            1. if the task is equal to the data-attribute, then check if done is true.
-            Then
-             */
             else if (nodeTarget.nodeName === "BUTTON") {
                 let target = ev.target as HTMLElement
                 this.populateForm(target.dataset.name!)
                 document.getElementById("task-customization")?.classList.toggle("hidden")
             }
-
         })
     }
 
@@ -129,17 +124,22 @@ export class DOMManager {
 
 
         let subTaskList = document.getElementById("subtask-list") as HTMLUListElement
-
+        // remove the children of the sublist-Task unordered list except the first one, in order to remove those
+        // leftover children
+        subTaskList.innerHTML = `<li>
+        <button type="button" id="add-subtask">add</button>
+        <input type="text" name="subtask" id="subtask">
+    </li>`
         for (let key in todo.checklist) {
             if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
                 let li = document.createElement("li")
                 li.textContent = key
-                console.log(subTaskList.contains(li))
-                if (!subTaskList.contains(li)) {
-                    subTaskList.appendChild(li)
-                }
+                li.dataset.name = key
+                subTaskList.appendChild(li)
             }
         }
+        console.log(subTaskList.children)
+
         console.log("node-lengths:", subTaskList.childNodes.length)
         console.log("checklist length:", Object.keys(todo.checklist).length);
 
