@@ -126,10 +126,12 @@ export class DOMManager {
         let subTaskList = document.getElementById("subtask-list") as HTMLUListElement
         // remove the children of the sublist-Task unordered list except the first one, in order to remove those
         // leftover children
-        subTaskList.innerHTML = `<li>
-        <button type="button" id="add-subtask">add</button>
-        <input type="text" name="subtask" id="subtask">
-    </li>`
+        console.log("before filling the space",subTaskList.children.length)
+
+        for (let element = subTaskList.children.length-1; element> 0; element--) {
+            console.log(subTaskList.children[element].remove())
+            
+        }
         for (let key in todo.checklist) {
             if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
                 let li = document.createElement("li")
@@ -138,9 +140,7 @@ export class DOMManager {
                 subTaskList.appendChild(li)
             }
         }
-        console.log(subTaskList.children)
-
-        console.log("node-lengths:", subTaskList.childNodes.length)
+        console.log("node-lengths:", subTaskList.children.length)
         console.log("checklist length:", Object.keys(todo.checklist).length);
 
         let date = document.getElementById("due-date") as HTMLInputElement
@@ -157,10 +157,11 @@ export class DOMManager {
     }
 
     populateSubtask() {
-        let subtaskBtn = document.getElementById("add-subtask")
+        let subtaskBtn = document.getElementById("add-subtask") as HTMLButtonElement
         let subtaskEl = document.getElementById("subtask") as HTMLInputElement
-        subtaskBtn?.addEventListener("click", () => {
-            if (subtaskEl != undefined) {
+        subtaskBtn.onclick = () => {
+            console.log("I got pressed");
+           /* if (subtaskEl != undefined) {
                 let subTaskList = document.createElement("li")
                 subTaskList.textContent = subtaskEl.value
                 console.log(subTaskList)
@@ -169,8 +170,8 @@ export class DOMManager {
                 let subtaskTitle = document.getElementById("task-name") as HTMLInputElement
                 this.storageManager.insertSubtask(subtaskTitle.value!, subTaskList.textContent)
 
-            }
-        })
+            }*/
+        }
 
     }
 
