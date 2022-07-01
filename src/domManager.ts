@@ -49,7 +49,6 @@ export class DOMManager {
                     let newTask = new Todo(`${addTaskInput.value}`)
                     this.storageManager.insertTaskObjectIntoStorage(addTaskInput.value, newTask)
                     addTaskInput!.value = ""
-
                 }
             }
         })
@@ -102,15 +101,7 @@ export class DOMManager {
                 }
 
             }
-            /*
-            if the button is pressed and the display is not hidden, activate the window
-                assign it the active class
-            if the button is pressed an the display hidden is true, then populate the form
-                assign the button the active class
-            if the button pressed is active, then close the task-customization window
-                remove all active class assignments
-             
-           */
+
             else if (nodeTarget.nodeName === "BUTTON") {
                 let target = ev.target as HTMLElement
                 let taskName = document.getElementById("task-name") as HTMLInputElement
@@ -122,47 +113,29 @@ export class DOMManager {
                     }
                     this.populateForm(target.dataset.name!)
                     target.classList.add("active")
-                } else if(target.dataset.name !== taskName.value && target.classList.contains("active") === true) {
+                    console.log(1)
+                } else if(target.dataset.name !== taskName.value &&
+                    target.classList.contains("active") === true) {
+                        if(taskBoard?.classList.contains("hidden")=== true){
+                            taskBoard.classList.remove("hidden")
+                        }
                     this.populateForm(target.dataset.name!)
-                    
-                } else if (target.dataset.name === taskName.value && target.classList.contains("active") === true) {
-                    this.removeActiveFromButtons()
+                    console.log(2)
+                } else if (target.dataset.name === taskName.value && 
+                    target.classList.contains("active") === true && 
+                    taskBoard?.classList.contains("hidden") === false ) {
                     taskBoard?.classList.add("hidden")
-                    
-                }
-
-                /*if (
-                    document.getElementById("task-customization")?.classList.contains("hidden") ===true
-                    ){
-                    document.getElementById("task-customization")?.classList.toggle("hidden")
-                    this.populateForm(target.dataset.name!)
-                    target.classList.add("active")
-                } else if (
-                    document.getElementById("task-customization")?.classList.contains("hidden") === false &&
-                    target.classList.contains("active") ===false){
-                    this.populateForm(target.dataset.name!)
-                    target.classList.add("active")
-                } else if (target.classList.contains("active") === true && target.dataset.name === taskName.value) {
-                    document.getElementById("task-customization")?.classList.toggle("hidden")
-                    console.log("deactivate all active buttons, except the one currently on")
                     this.removeActiveFromButtons()
-
+                    console.log(3)
+                } else if (taskBoard?.classList.contains("hidden")){
+                    taskBoard.classList.remove("hidden")
                 }
 
-                
-                
-                /*target.classList.toggle("active")
-                if(target.classList.contains("active")){
-                    this.populateForm(target)
-                }
-                document.getElementById("task-customization")?.classList.toggle("hidden")
-                */
             }
         })
     }
     
     removeActiveFromButtons() {
-        console.log("removeActiveFromButtons activated")
         let doneContainer = document.getElementById("done")
         let notDoneContainer = document.getElementById("not-done")
         if (doneContainer?.children.length === undefined) console.log("content is undefined")
