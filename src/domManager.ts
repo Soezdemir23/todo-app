@@ -102,12 +102,83 @@ export class DOMManager {
                 }
 
             }
+            /*
+            if the button is pressed and the display is not hidden, activate the window
+                assign it the active class
+            if the button is pressed an the display hidden is true, then populate the form
+                assign the button the active class
+            if the button pressed is active, then close the task-customization window
+                remove all active class assignments
+             
+           */
             else if (nodeTarget.nodeName === "BUTTON") {
                 let target = ev.target as HTMLElement
-                this.populateForm(target.dataset.name!)
+                let taskName = document.getElementById("task-name") as HTMLInputElement
+                let taskBoard = document.getElementById("task-customization")
+
+                if (target.classList.contains("active") === false) {
+                    if (taskBoard?.classList.contains("hidden") === true){
+                        taskBoard?.classList.remove("hidden")
+                    }
+                    this.populateForm(target.dataset.name!)
+                    target.classList.add("active")
+                } else if(target.dataset.name !== taskName.value && target.classList.contains("active") === true) {
+                    this.populateForm(target.dataset.name!)
+                    
+                } else if (target.dataset.name === taskName.value && target.classList.contains("active") === true) {
+                    this.removeActiveFromButtons()
+                    taskBoard?.classList.add("hidden")
+                    
+                }
+
+                /*if (
+                    document.getElementById("task-customization")?.classList.contains("hidden") ===true
+                    ){
+                    document.getElementById("task-customization")?.classList.toggle("hidden")
+                    this.populateForm(target.dataset.name!)
+                    target.classList.add("active")
+                } else if (
+                    document.getElementById("task-customization")?.classList.contains("hidden") === false &&
+                    target.classList.contains("active") ===false){
+                    this.populateForm(target.dataset.name!)
+                    target.classList.add("active")
+                } else if (target.classList.contains("active") === true && target.dataset.name === taskName.value) {
+                    document.getElementById("task-customization")?.classList.toggle("hidden")
+                    console.log("deactivate all active buttons, except the one currently on")
+                    this.removeActiveFromButtons()
+
+                }
+
+                
+                
+                /*target.classList.toggle("active")
+                if(target.classList.contains("active")){
+                    this.populateForm(target)
+                }
                 document.getElementById("task-customization")?.classList.toggle("hidden")
+                */
             }
         })
+    }
+    
+    removeActiveFromButtons() {
+        console.log("removeActiveFromButtons activated")
+        let doneContainer = document.getElementById("done")
+        let notDoneContainer = document.getElementById("not-done")
+        if (doneContainer?.children.length === undefined) console.log("content is undefined")
+        else {
+            for(let index = 0; index < doneContainer.children.length-1; index++){
+                console.log(doneContainer.children[index]);
+            }
+        }
+        if (notDoneContainer?.children.length === undefined) console.log("content is undefined")
+        else {
+            for(let index = 0; index < notDoneContainer.children.length-1; index++){
+                notDoneContainer.children[index].firstElementChild?.classList.remove("active")
+            }
+        }
+        
+        
     }
 
     pushToDoneOrUndoneContainer(target: HTMLElement, id: string) {
@@ -126,10 +197,9 @@ export class DOMManager {
         let subTaskList = document.getElementById("subtask-list") as HTMLUListElement
         // remove the children of the sublist-Task unordered list except the first one, in order to remove those
         // leftover children
-        console.log("before filling the space",subTaskList.children.length)
-
+        
         for (let element = subTaskList.children.length-1; element> 0; element--) {
-            console.log(subTaskList.children[element].remove())
+            subTaskList.children[element].remove()
             
         }
         for (let key in todo.checklist) {
@@ -140,11 +210,8 @@ export class DOMManager {
                 subTaskList.appendChild(li)
             }
         }
-        console.log("node-lengths:", subTaskList.children.length)
-        console.log("checklist length:", Object.keys(todo.checklist).length);
 
         let date = document.getElementById("due-date") as HTMLInputElement
-        console.log(todo.dueDate)
         date.value = todo.dueDate
         let notesElement = document.getElementById("notes") as HTMLTextAreaElement
         if (todo.notes !== undefined) {
@@ -160,7 +227,6 @@ export class DOMManager {
         let subtaskBtn = document.getElementById("add-subtask") as HTMLButtonElement
         let subtaskEl = document.getElementById("subtask") as HTMLInputElement
         subtaskBtn.onclick = () => {
-            console.log("I got pressed");
            /* if (subtaskEl != undefined) {
                 let subTaskList = document.createElement("li")
                 subTaskList.textContent = subtaskEl.value
