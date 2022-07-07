@@ -79,8 +79,9 @@ ul {
   background-color: #f3f3f3;
   position: relative;
   right: 30px;
-  text-align: center;
-  border-radius: 4px;
+  display: flex;
+  border-radius: 3px;
+  gap: 4px;
 }
 #tasks-container liactive {
   background-color: #ffffff;
@@ -102,30 +103,222 @@ ul {
   color: grey;
   text-decoration: line-through;
 }
-#task-customization {
-  margin: 1rem 1rem;
+#task-parent {
+  max-width: 500px;
+  background-color: #272727;
+  color: white;
+  padding: 1rem;
+  overflow-y: scroll;
+  margin-bottom: 3rem;
 }
-#task-customization #task-customization-header ul {
+#task-parent img {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(13deg) brightness(107%) contrast(102%);
+  width: 25px;
+  height: 25px;
+}
+#task-parent ul {
   position: relative;
-  right: 40px;
+  bottom: 70px;
+  list-style-type: none;
 }
-#task-customization #rmd-container {
+#task-parent li {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  right: 15px;
+}
+#task-parent li > img {
+  position: relative;
+  bottom: 3px;
+}
+#task-parent li > span {
+  flex-grow: 1;
+}
+#task-parent #task-container {
+  margin: 0.2rem;
+  padding: 1rem;
+  background-color: #323232;
   display: flex;
   flex-direction: column;
 }
-#task-customization #rmd-container div {
-  display: inline;
-  margin-bottom: 2px 0;
+#task-parent #task-description-container {
+  display: flex;
+  gap: 1rem;
 }
-#task-customization #rmd-container div p {
-  display: inline;
+#task-parent #task-description-container > p {
+  flex-grow: 1;
+  position: relative;
+  bottom: 25px;
+  font-size: 1.5rem;
 }
-#task-customization #notes-container {
+#task-parent #subtask-list-container {
+  padding: 1rem;
+}
+#task-parent #add-subtask-list {
+  margin-bottom: -7rem;
+  display: flex;
+}
+#task-parent #add-subtask-list > span {
+  position: relative;
+  right: 0.1rem;
+}
+#task-parent #add-subtask-button {
+  filter: invert(46%) sepia(18%) saturate(201%) hue-rotate(161deg) brightness(90%) contrast(92%);
+}
+#task-parent #add-subtask-text {
+  filter: invert(35%) sepia(18%) saturate(161%) hue-rotate(161deg) brightness(94%) contrast(92%);
+  cursor: text;
+}
+#task-parent .subtask-child {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 500px;
+  padding: 0.5rem 0rem;
+}
+#task-parent .subtask-child > div {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  border-bottom: solid 1px #434343;
+}
+#task-parent .subdone-img {
+  height: 15px;
+  width: 15px;
+  left: 5px;
+}
+#task-parent .subtask-child > div > span {
+  color: #9b9fab;
+  flex-grow: 1;
+}
+#task-parent #add-to-my-day-container {
+  background-color: #323232;
+  margin: 0.1rem 0.2rem;
+  position: relative;
+  top: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+#task-parent #add-to-my-day-container > img {
+  position: relative;
+  left: 0.2rem;
+  width: 20px;
+  height: 20px;
+  filter: invert(35%) sepia(18%) saturate(161%) hue-rotate(161deg) brightness(94%) contrast(92%);
+}
+#task-parent #add-to-my-day-container > div {
+  display: flex;
+  flex-grow: 1;
+}
+#task-parent #add-to-my-day-text {
+  flex-grow: 1;
+  color: #9b9fab;
+}
+#task-parent #repeat-add-due-container {
+  background-color: #323232;
+  margin: 0.1rem 0.2rem;
+  padding: 1rem;
+  position: relative;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: default;
+}
+#task-parent .repeat-add-due-child {
+  display: flex;
+  gap: 1.2rem;
+}
+#task-parent .repeat-add-due-child > img {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  left: 0.2rem;
+}
+#task-parent .reapeat-add-due-child > span {
+  position: relative;
+  flex-grow: 1;
+}
+#task-parent .repeat-add-due-child:first-child {
+  border-bottom: #9b9fab solid 1px;
+}
+#task-parent .repeat-add-due-child:nth-child(2) {
+  border-bottom: #9b9fab solid 1px;
+}
+#task-parent #cycles-container {
+  background-color: #323232;
+  position: relative;
+  top: 1.5rem;
+  margin: 0.1rem 0.2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
 }
-#task-customization text-area {
-  resize: none;
+#task-parent .cycles-child {
+  display: flex;
+}
+#task-parent .date-child {
+  flex-grow: 1;
+  position: relative;
+  left: 2.4rem;
+}
+#task-parent #notes {
+  background-color: #323232;
+  margin: 0.1rem 0.2rem;
+  padding: 1rem;
+  position: relative;
+  top: 2rem;
+}
+#task-parent #notes > p {
+  position: relative;
+  bottom: 15px;
+  margin-bottom: -1rem;
+}
+#task-parent #due-by-submenu {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  border: 1px solid white;
+  padding: 1rem;
+  background-color: #323232;
+}
+#task-parent #due-by-submenu > div {
+  border-bottom: solid 1px #9b9fab;
+  padding: 0.5rem 0;
+}
+#task-parent #due-by-submenu > div:hover {
+  background-color: #434343;
+}
+#task-parent #due-by-date-submenu {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  padding: 1rem;
+  background-color: #323232;
+  border: 1px solid white;
+}
+#task-parent #project-choose {
+  display: none;
+  position: absolute;
+  z-index: 0;
+  background-color: #323232;
+  border: 1px white solid;
+  padding: 1rem;
+}
+#task-parent #cycle-container {
+  position: absolute;
+  z-index: 1;
+  background-color: #323232;
+  border: 1px solid white;
+}
+#task-parent #repeat-submenu {
+  display: none;
+  z-index: 1;
+  position: absolute;
+  background-color: #323232;
+  border: solid 1px white;
 }
 
 /*# sourceMappingURL=style.css.map */
