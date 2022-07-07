@@ -124,38 +124,8 @@ ul {
 }
 
 
-#task-customization {
-    margin: 1rem 1rem;
-
-    #task-customization-header {
-        ul {
-            position: relative;
-            right: 40px;
-        }
-    }
-
-    #rmd-container {
-        display: flex;
-        flex-direction: column;
-        div {
-            display: inline;
-            margin-bottom: 2px 0;
-            p{
-                display: inline;
-            }
-        }
-    }
-    #notes-container {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    text-area {
-        resize: none;
-    }
-}
 
 
 .hidden{
-    display: none;
+    //display: none;
 }

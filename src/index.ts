@@ -11,6 +11,12 @@ let fullTask = new Todo("This is a test",
     "24th january 2023", 3 ,
     {"get milk": false,"go jogging": false, "try to get a job": false}, 
     "I took a mean ass shit")
+    let secondTask = new Todo("second", 
+    "second", false,
+    "24th january 2023", 3 ,
+    {"first": false, "second": false, "third": false}, 
+    "second")
+storage.insertTaskObjectIntoStorage("second", secondTask)
 storage.insertTaskObjectIntoStorage("This is a test", fullTask)
 console.log(fullTask)
 let dom = new DOMManager(storage);

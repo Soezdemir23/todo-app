@@ -1,0 +1,136 @@
+@import url("./_normalize.scss");
+@font-face {
+  font-family: "NotoSans";
+  src: url("../font/NotoSans-Light.ttf");
+}
+body {
+  height: 100vh;
+  display: flex;
+  font-family: "NotoSans", sans-serif;
+}
+
+ul {
+  list-style-type: none;
+}
+
+#lists-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f3f3f3;
+  min-width: 280px;
+}
+#lists-container .section {
+  overflow: auto;
+  flex-grow: 1;
+}
+#lists-container ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+#lists-container ul li {
+  position: relative;
+  right: 30px;
+  display: flex;
+  align-items: center;
+}
+#lists-container ul li:hover {
+  background-color: #e0e0e0;
+}
+#lists-container img {
+  padding-right: 1rem;
+  width: 15px;
+}
+#lists-container #default-projects-container {
+  border-bottom: #e0e0e0 2px solid;
+}
+#lists-container .footer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#lists-container .footer img {
+  position: relative;
+  left: 10px;
+  top: 1px;
+}
+#lists-container .footer imghover {
+  background-color: #e0e0e0;
+}
+
+#tasks-container {
+  background-color: #687ccc;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+#tasks-container .header h2 {
+  color: #fff;
+}
+#tasks-container .section {
+  flex-grow: 1;
+}
+#tasks-container ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+#tasks-container li {
+  background-color: #f3f3f3;
+  position: relative;
+  right: 30px;
+  display: flex;
+  border-radius: 3px;
+  gap: 4px;
+}
+#tasks-container liactive {
+  background-color: #ffffff;
+}
+#tasks-container li p {
+  display: inline;
+  cursor: pointer;
+}
+#tasks-container .footer div {
+  background-color: #e0e0e0;
+  display: flex;
+  position: relative;
+  bottom: 15px;
+}
+#tasks-container .footer div img {
+  width: 25px;
+}
+#tasks-container .task-child-done {
+  color: grey;
+  text-decoration: line-through;
+}
+#task-customization {
+  margin: 1rem 1rem;
+  background-color: grey;
+}
+#task-customization #first-header > div {
+  display: flex;
+}
+#task-customization #task-customization-header ul {
+  position: relative;
+  right: 40px;
+}
+#task-customization #rmd-container {
+  display: flex;
+  flex-direction: column;
+}
+#task-customization #rmd-container div {
+  display: inline;
+  margin-bottom: 2px 0;
+}
+#task-customization #rmd-container div p {
+  display: inline;
+}
+#task-customization #notes-container {
+  display: flex;
+  flex-direction: column;
+}
+#task-customization text-area {
+  resize: none;
+}
+
+/*# sourceMappingURL=style.css.map */

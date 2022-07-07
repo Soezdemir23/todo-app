@@ -118,6 +118,8 @@ export class DOMManager {
                     target.classList.contains("active") === true) {
                         if(taskBoard?.classList.contains("hidden")=== true){
                             taskBoard.classList.remove("hidden")
+                        } else {
+                            taskBoard?.classList.add("hidden")
                         }
                     this.populateForm(target.dataset.name!)
                     console.log(2)
@@ -161,10 +163,10 @@ export class DOMManager {
     populateForm(taskname: string) {
         let todo = this.storageManager.getTask(taskname)
         // get the task title
-        let taskTitle = document.getElementById("task-name") as HTMLInputElement
-        taskTitle.value = todo.title
-        let taskDesc = document.getElementById("task-description") as HTMLInputElement
-        taskDesc.value = todo.description
+        let taskTitle = document.getElementById("task-name") as HTMLParagraphElement
+        taskTitle.textContent = todo.title
+        let taskDesc = document.getElementById("task-description") as HTMLParagraphElement
+        taskDesc.textContent = todo.description
 
 
         let subTaskList = document.getElementById("subtask-list") as HTMLUListElement
