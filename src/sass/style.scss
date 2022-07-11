@@ -124,11 +124,13 @@ ul {
 }
 
 #task-parent {
+    
     max-width: 500px;
     background-color: #272727;
     color: white;
     padding: 1rem;
     overflow-y: scroll;
+    height: 608.5px;
     margin-bottom: 3rem;
 
     img {
@@ -174,7 +176,7 @@ ul {
         flex-grow: 1;
         position: relative;
         bottom: 25px;
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
     
     
@@ -354,6 +356,7 @@ ul {
     }
     
     #cycle-container {
+        display: none;
         position: absolute;
         z-index: 1;
         background-color: #323232;
