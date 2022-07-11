@@ -22,7 +22,7 @@ console.log(fullTask)
 let dom = new DOMManager(storage);
 dom.hookSVGToElements()
 dom.repopulateTasksListDOM()
-//dom.readTaskFromDOM()
-//dom.listContext()
+dom.readTaskFromDOM()
+dom.listContext()
 //dom.populateSubtask()
 // this was instantiated and since the task variable was zero, it didn't work so well
