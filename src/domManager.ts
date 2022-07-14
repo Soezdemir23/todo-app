@@ -212,15 +212,17 @@ export class DOMManager {
 
         taskTitle.textContent = todo.title + " -- " + todo.description
 
-        let subTaskList = document.getElementsByClassName("subtask-child") as HTMLCollectionOf<HTMLLIElement>// HTMLCollectionOf<Element>
-        // remove the children of the sublist-Task unordered list except the first one, in order to remove those
-        // leftover children
-        if (Object.keys(todo.checklist).length > 0) {
-            console.log(todo.checklist)
-            for (let element = subTaskList.length - 1; element > 0; element--) {
-                //subTaskList.children[element].remove()
+        let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
+        
+        for (let i = 0; i < subTaskList.children.length + 1; i++) {
+            let child = subTaskList.children[0] as HTMLLIElement
+            if (child.className === "subtask-child") {
+                subTaskList.removeChild(child)
             }
-
+        }
+        
+        if (Object.keys(todo.checklist).length > 0) {
+            console.log(todo.checklist)            
             for (let key in todo.checklist) {
 
                 if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
@@ -254,7 +256,7 @@ export class DOMManager {
             console.log("subtasks empty")
         }
 
-        let date = document.getElementById("due-date") as HTMLInputElement
+       /* let date = document.getElementById("due-date") as HTMLInputElement
         date.value = todo.dueDate
         let notesElement = document.getElementById("notes") as HTMLTextAreaElement
         if (todo.notes !== undefined) {
@@ -263,7 +265,7 @@ export class DOMManager {
         let priorityElement = document.getElementById("priority-select") as HTMLSelectElement
         priorityElement.value = todo.priority.toString()
         this.done = true
-
+*/
     }
 
     populateSubtask() {
