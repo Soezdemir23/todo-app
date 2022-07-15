@@ -81,79 +81,23 @@
             <div id="task-container">
                 <div id="task-description-container">
     
-                    <img id="done-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg" alt="" srcset="">
-                    <p contenteditable="true" id="done-content">Test the form taking and create a new
-                        todo task from it sadfsfsfsfsfsdfsdf
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas accusantium doloremque accusamus
-                        libero, aut molestiae quidem sunt atque aliquam modi enim incidunt facere quae at temporibus
-                        repellat dolorum deleniti quibusdam.
+                    <img id="done-img" alt="">
+                    <p contenteditable="true" id="task-content">
+                        
                     </p>
-                    <img src="grade_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                    <img id="favorite" src="grade_FILL0_wght400_GRAD0_opsz48.svg" alt="">
     
                 </div>
                 <ul id="subtask-list-container">
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                    </li>
-    
-                    <li id="add-subtask-list"><img src="add.svg" alt="add-task-symbol"id="add-subtask-button"><span
-                            contenteditable="true" id="add-subtask-text">Next step</span>
+                    <li id="add-subtask-list">
+                        <img alt="add-task-symbol"id="add-subtask-button">
+                        <span contenteditable="true" id="add-subtask-text">Next step</span>
                     </li>
                 </ul>
             </div>
     
             <div id="add-to-my-day-container">
-                <img src="sunny_FILL0_wght400_GRAD0_opsz48.svg" alt="myDay">
+                <img id="add-to-my-day-container-image" alt="myDay">
                 <div>
                     <span id="add-to-my-day-text">Add to my day</span>
                     <span id="add-to-my-day-cross">&Cross;</span>
@@ -164,18 +108,18 @@
                 <!--Get submenu and then, if the user clicks at create cycle, open the date-time-container.
                     Place it under the same line as the submenu-->
                 <div class="repeat-add-due-child">
-                    <img src="event_repeat.svg" alt="repeat sign">
+                    <img id="event-repeat-image" alt="repeat sign">
                     <span>Repeat</span>
                 </div>
                 <div class="repeat-add-due-child">
-                    <img src="date_range.svg" alt="add project">
+                    <img id="add-to-project-image" alt="add project">
                     <span>Add to project</span>
                 </div>
                 <!--Get the due-by-submenu under this.
                     Today, Tomorrow, Next Week, Pick a date
                 -->
                 <div class="repeat-add-due-child">
-                    <img src="remind_me.svg" alt="add due date">
+                    <img id="add-due-date-image" alt="add due date">
                     <span>Add due date</span>
                 </div>
             </div>
@@ -217,19 +161,19 @@
                 <div class="cycles-child">
                     <span class="date-child">3rd JAnuary 2023</span>
                     <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
+                        <img alt="date-options">
                     </span>
                 </div>
                 <div class="cycles-child">
                     <span class="date-child">3rd JAnuary 2023</span>
                     <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
+                        <img alt="date-options">
                     </span>
                 </div>
                 <div class="cycles-child">
                     <span class="date-child">3rd JAnuary 2023</span>
                     <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
+                        <img  alt="date-options">
                     </span>
                 </div>
             </div>
