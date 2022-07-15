@@ -145,10 +145,16 @@ export class DOMManager {
                 }
 
             }
-
+            // the task-name is gone. I need to refactor the conditions below
             else if (nodeTarget.nodeName === "BUTTON") {
                 let target = ev.target as HTMLElement
-                let taskName = document.getElementById("task-name") as HTMLInputElement
+                let taskContent = document.getElementById("task-content") as HTMLParagraphElement
+                
+                let taskTitle = taskContent.textContent?.slice(
+                    0,
+                    taskContent.textContent.indexOf(" -- ")
+                )
+
                 let taskBoard = document.getElementById("task-customization")
 
                 if (target.classList.contains("active") === false) {
@@ -158,7 +164,7 @@ export class DOMManager {
                     this.populateForm(target.dataset.name!)
                     target.classList.add("active")
                     console.log(1)
-                } else if (target.dataset.name !== taskName.value &&
+                } else if (target.dataset.name !== taskTitle &&
                     target.classList.contains("active") === true) {
                     if (taskBoard?.classList.contains("hidden") === true) {
                         taskBoard.classList.remove("hidden")
@@ -167,7 +173,7 @@ export class DOMManager {
                     }
                     this.populateForm(target.dataset.name!)
                     console.log(2)
-                } else if (target.dataset.name === taskName.value &&
+                } else if (target.dataset.name === taskTitle &&
                     target.classList.contains("active") === true &&
                     taskBoard?.classList.contains("hidden") === false) {
                     taskBoard?.classList.add("hidden")
@@ -176,7 +182,6 @@ export class DOMManager {
                 } else if (taskBoard?.classList.contains("hidden")) {
                     taskBoard.classList.remove("hidden")
                 }
-
             }
         })
     }
@@ -208,9 +213,11 @@ export class DOMManager {
         let todo = this.storageManager.getTask(taskname)
 
         // get the task title
-        let taskTitle = document.getElementById("task-content") as HTMLParagraphElement
+        let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
+        // create it extra, or the
 
-        taskTitle.textContent = todo.title + " -- " + todo.description
+
+        taskTitleAndContent.textContent = todo.title + " -- " + todo.description
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
         
