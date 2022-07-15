@@ -19,4 +19,7 @@ title [mandatory],
 
 description, dueDate, priority, checklist = {}, notes: "", [optional]
 #### DOM Manager
-hooks assets
++ hooks assets
++ adds eventlistener to elements
++ takes the input for the manager and saves it or puts it into the dom
++ 
