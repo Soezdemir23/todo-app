@@ -170,22 +170,24 @@ ul {
     #task-description-container{
         display: flex;
         gap: 1rem;
+        margin-bottom: 2rem;
     }
     
     #task-description-container > p {
         flex-grow: 1;
         position: relative;
-        bottom: 25px;
+        bottom: 20px;
         font-size: 1rem;
     }
     
     
     #subtask-list-container {
         padding: 1rem;
+        margin-bottom: -5rem;
     }
     #add-subtask-list {
-        margin-bottom: -7rem;
         display: flex;
+        
     }
     #add-subtask-list > span {
         position: relative;
@@ -259,7 +261,7 @@ ul {
         margin: 0.1rem 0.2rem;
         padding: 1rem;
         position: relative;
-        top: 1rem;
+        top: 1.2rem;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -286,17 +288,19 @@ ul {
     .repeat-add-due-child:first-child {
         border-bottom: #9b9fab solid 1px;
     }
-    .repeat-add-due-child:nth-child(2) {
+    .repeat-add-due-child:nth-child(2) { 
         border-bottom: #9b9fab solid 1px;
     }
-    
+    .repeat-add-due-child:nth-child(3) {
+        border-bottom: #9b9fab solid 1px;
+    }        
     #cycles-container {
+        display: flex;
         background-color: #323232;
         position: relative;
-        top: 1.5rem;
+        top: 1.8rem;
         margin: 0.1rem 0.2rem;
         padding: 1rem;
-        display: flex;
         flex-direction: column;
     }
     .cycles-child {
@@ -310,11 +314,12 @@ ul {
     }
     
     #notes {
+        display: flex;
         background-color: #323232;
         margin: 0.1rem 0.2rem;
         padding: 1rem;
         position: relative;
-        top: 2rem;
+        top: 2.4rem;
     }
     
     #notes > p {

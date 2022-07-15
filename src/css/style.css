@@ -104,7 +104,8 @@ ul {
   text-decoration: line-through;
 }
 #task-parent {
-  max-width: 500px;
+  min-width: 350px;
+  max-width: 375px;
   background-color: #272727;
   color: white;
   padding: 1rem;
@@ -145,18 +146,19 @@ ul {
 #task-parent #task-description-container {
   display: flex;
   gap: 1rem;
+  margin-bottom: 2rem;
 }
 #task-parent #task-description-container > p {
   flex-grow: 1;
   position: relative;
-  bottom: 25px;
+  bottom: 20px;
   font-size: 1rem;
 }
 #task-parent #subtask-list-container {
   padding: 1rem;
+  margin-bottom: -5rem;
 }
 #task-parent #add-subtask-list {
-  margin-bottom: -7rem;
   display: flex;
 }
 #task-parent #add-subtask-list > span {
@@ -222,7 +224,7 @@ ul {
   margin: 0.1rem 0.2rem;
   padding: 1rem;
   position: relative;
-  top: 1rem;
+  top: 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -248,13 +250,16 @@ ul {
 #task-parent .repeat-add-due-child:nth-child(2) {
   border-bottom: #9b9fab solid 1px;
 }
+#task-parent .repeat-add-due-child:nth-child(3) {
+  border-bottom: #9b9fab solid 1px;
+}
 #task-parent #cycles-container {
+  display: flex;
   background-color: #323232;
   position: relative;
-  top: 1.5rem;
+  top: 1.8rem;
   margin: 0.1rem 0.2rem;
   padding: 1rem;
-  display: flex;
   flex-direction: column;
 }
 #task-parent .cycles-child {
@@ -266,11 +271,12 @@ ul {
   left: 2.4rem;
 }
 #task-parent #notes {
+  display: flex;
   background-color: #323232;
   margin: 0.1rem 0.2rem;
   padding: 1rem;
   position: relative;
-  top: 2rem;
+  top: 2.4rem;
 }
 #task-parent #notes > p {
   position: relative;
