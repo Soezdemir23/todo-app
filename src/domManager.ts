@@ -308,4 +308,96 @@ export class DOMManager {
             notesElement.textContent = "Add note"
         }
     }
+    /**
+     * This function is going to be incorporating several different methods depemnding on the 
+     * DOM elements.
+     */
+    formContext () {
+        let taskParent = document.getElementById("task-parent")
+        taskParent!.onclick = (ev: MouseEvent) => {
+            console.log(ev.target)
+            let element = ev.target as HTMLElement
+            if (element === undefined) return
+            
+            switch (element.id) {
+                case "close-task-customization":
+                    this.closeMenu();
+                    break;
+                case "task-description-container":
+                    this.taskDescriptionContext(ev)
+                    break;
+                case "subtask-list-container":
+                    this.subtaskListContext(ev)
+                    break;
+                case "add-to-my-day-container":
+                    this.addToMyDayContext(ev)
+                    break;
+                case "repeat-add-due-container":
+                    this.radContext(ev)
+                    break;
+                case "due-by-submenu":
+                    this.dueBySubmenuContext(ev)
+                    break;
+                case "due-by-date-submenu":
+                    this.dueByDateSubmenuContext(ev)
+                    break;
+                case "repeat-submenu":
+                    this.repeatSubmenuContext(ev)
+                    break;
+                case "project-choose":
+                    this.projectChooseContext(ev) // later
+                    break;
+                case "cycle-container":
+                    this.cycleContainerContext(ev)
+                    break;
+                case "cycles-container":
+                    this.cyclesContainerContext(ev)
+                    break;
+                case "notes":
+                    this.notesContext(ev)
+                    break;
+                default:
+                    console.log("not implemented")
+                    break;
+            }
+
+        
+        }
+    }
+    closeMenu() {
+        throw new Error('Method not implemented.')
+    }
+    taskDescriptionContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    subtaskListContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    addToMyDayContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    radContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    dueBySubmenuContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    dueByDateSubmenuContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    repeatSubmenuContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    projectChooseContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    cycleContainerContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    cyclesContainerContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
+    notesContext(ev: MouseEvent) {
+        throw new Error('Method not implemented.')
+    }
 }

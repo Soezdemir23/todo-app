@@ -31,5 +31,6 @@ dom.hookSVGToElements()
 dom.repopulateTasksListDOM()
 dom.readTaskFromDOM()
 dom.listContext()
+dom.formContext()
 //dom.populateSubtask()
 // this was instantiated and since the task variable was zero, it didn't work so well
