@@ -1,25 +1,10 @@
 # ToDo-App
 A wise man once said:
 You ain't a developer if you haven't created a ToDo App so far.
-<<<<<<< HEAD
+Therefore we are creating a Todo App.
 
+Made with Typescript and Sass. Bundled with Webpack 5
 
-## Sketching:
+Current Todo:
 
-=======
-Going to use local storage for that one.
-
-## Sketching:
-### Code drafting:
->>>>>>> layout
-
-
-#### Todo class:
-title [mandatory],
-
-description, dueDate, priority, checklist = {}, notes: "", [optional]
-#### DOM Manager
-+ hooks assets
-+ adds eventlistener to elements
-+ takes the input for the manager and saves it or puts it into the dom
-+ 
++ fix populateForm and the corresponding form elements
