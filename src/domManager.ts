@@ -1,5 +1,5 @@
 import MyDay from './img/home_FILL0_wght400_GRAD0_opsz48.svg'
-import SoonDue from './img/crisis_alert_FILL0_wght400_GRAD0_opsz48.svg'
+import SoonDue from './img/crisis_alert.svg'
 import Planned from './img/event_upcoming_FILL0_wght400_GRAD0_opsz48.svg'
 import AllTasks from './img/grade_FILL0_wght400_GRAD0_opsz48.svg'
 import Project from './img/list_FILL0_wght400_GRAD0_opsz48.svg'
@@ -13,6 +13,7 @@ import AddToDay from './img/sunny.svg'
 import Repeat from './img/event_repeat.svg'
 import AddToProject from './img/perm_media.svg'
 import AddDueDate from './img/edit_calendar.svg'
+import AddPriority from './img/priority_high.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
@@ -61,8 +62,11 @@ export class DOMManager {
         addToProjectImage.src = AddToProject
         let addToDueDateImage = document.getElementById("add-due-date-image") as HTMLImageElement
         addToDueDateImage.src = AddDueDate
+        let addPriorityImage = document.getElementById("add-priority-image") as HTMLImageElement
+        addPriorityImage.src = AddPriority
         let cyclesChildren = document.getElementsByClassName("date-options")
         this.fillSubtaskVerts(cyclesChildren, MoreVert)
+
     }
 
     fillSubtaskVerts(classList: string | any[] | HTMLCollectionOf<Element>, Image: string) {
@@ -214,9 +218,7 @@ export class DOMManager {
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
-        // create it extra, or the
-
-
+        
         taskTitleAndContent.textContent = todo.title + " -- " + todo.description
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
@@ -263,35 +265,47 @@ export class DOMManager {
             console.log("subtasks empty")
         }
 
-       /* let date = document.getElementById("due-date") as HTMLInputElement
-        date.value = todo.dueDate
-        let notesElement = document.getElementById("notes") as HTMLTextAreaElement
+        let radChildren = document.getElementsByClassName("repeat-add-due-child")
+        
+        let date = radChildren[2].querySelector("span")
+        if(todo.dueDate !== "") date!.textContent = todo.dueDate
+        else date!.textContent = "Add due date"
+
+        let repeat = radChildren[0].querySelector("span")
+        if (todo.repeat !== undefined) repeat!.textContent = todo.repeat.toString()
+        //added later when I am working on the project class
+        let addProject = radChildren[1].querySelector("span")
+
+        let priority = radChildren[3].querySelector("span")
+        switch (todo.priority) {
+            case 0:
+                priority!.textContent = "Low importance [0]"
+                break;
+            case 1:
+                priority!.textContent = "medium importance [1]"
+            case 2:
+                priority!.textContent = "high importance [2]"
+            case 3:
+                priority!.textContent = "high importance [3]"
+            default:
+                if (todo.priority !== undefined) {
+                    priority!.textContent = "Set Priority"
+                } else {
+                    priority!.textContent = "Invalid Priority"
+                }
+                break;
+        }
+        /**
+         * TODO: Add the other radchildren:
+         * a. repeat
+         * b. Add Project -> Project name
+         * c. Priority
+        */
+        let notesElement = document.getElementById("notes") as HTMLParagraphElement
         if (todo.notes !== undefined) {
-            notesElement.value = todo.notes
+            notesElement.textContent = todo.notes
+        } else {
+            notesElement.textContent = "Add note"
         }
-        let priorityElement = document.getElementById("priority-select") as HTMLSelectElement
-        priorityElement.value = todo.priority.toString()
-        this.done = true
-*/
     }
-
-    populateSubtask() {
-        let subtaskBtn = document.getElementById("add-subtask") as HTMLButtonElement
-        let subtaskEl = document.getElementById("subtask") as HTMLInputElement
-        subtaskBtn.onclick = () => {
-            /* if (subtaskEl != undefined) {
-                 let subTaskList = document.createElement("li")
-                 subTaskList.textContent = subtaskEl.value
-                 console.log(subTaskList)
-                 document.getElementById("subtask-list")?.append(subTaskList)
-                 // get the task title from task customization and the get the todo
-                 let subtaskTitle = document.getElementById("task-name") as HTMLInputElement
-                 this.storageManager.insertSubtask(subtaskTitle.value!, subTaskList.textContent)
- 
-             }*/
-        }
-
-    }
-
-
 }
