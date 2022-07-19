@@ -194,10 +194,11 @@ export class DOMManager {
                 if (taskTitle === target.dataset.name) {
                     taskBoard.classList.toggle("hidden")
                 } else if (taskTitle !== target.dataset.name) {
+                    taskBoard.classList.remove("hidden")
                     this.populateForm(target.dataset.name)
                 }
                 console.log("b")
-                console.log()
+                
             }
         }else {
             console.log("Something is wrong with the function taskButtonContext")
@@ -322,10 +323,11 @@ export class DOMManager {
     }
     /**
      * This function is going to be incorporating several different methods to hook event delegations regarding the 
-     * parents to the task customization
+     * parents to the task customization. 
      */
     formContext() {
         this.closeMenu()
+
         this.taskDescriptionContext()
         this.subtaskListContext()
         this.addToMyDayContext()
@@ -343,6 +345,7 @@ export class DOMManager {
         let closeButton = document.getElementById('close-task-customization')
         closeButton?.addEventListener('click', () => {
             document.getElementById('task-customization')?.classList.toggle("hidden")
+            this.removeActiveFromButtons()
         })
     }
     taskDescriptionContext() {
