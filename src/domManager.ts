@@ -151,62 +151,78 @@ export class DOMManager {
             }
             // the task-name is gone. I need to refactor the conditions below
             else if (nodeTarget.nodeName === "BUTTON") {
-                let target = ev.target as HTMLElement
-                let taskContent = document.getElementById("task-content") as HTMLParagraphElement
-                
-                let taskTitle = taskContent.textContent?.slice(
-                    0,
-                    taskContent.textContent.indexOf(" -- ")
-                )
-
-                let taskBoard = document.getElementById("task-customization")
-
-                if (target.classList.contains("active") === false) {
-                    if (taskBoard?.classList.contains("hidden") === true) {
-                        taskBoard?.classList.remove("hidden")
-                    }
-                    this.populateForm(target.dataset.name!)
-                    target.classList.add("active")
-                    console.log(1)
-                } else if (target.dataset.name !== taskTitle &&
-                    target.classList.contains("active") === true) {
-                    if (taskBoard?.classList.contains("hidden") === true) {
-                        taskBoard.classList.remove("hidden")
-                    } else {
-                        taskBoard?.classList.add("hidden")
-                    }
-                    this.populateForm(target.dataset.name!)
-                    console.log(2)
-                } else if (target.dataset.name === taskTitle &&
-                    target.classList.contains("active") === true &&
-                    taskBoard?.classList.contains("hidden") === false) {
-                    taskBoard?.classList.add("hidden")
-                    this.removeActiveFromButtons()
-                    console.log(3)
-                } else if (taskBoard?.classList.contains("hidden")) {
-                    taskBoard.classList.remove("hidden")
-                }
+                this.taskButtonContext(ev, taskChildrenParent)
             }
         })
+    }
+
+    /**
+     * This method is called when the user clicks the plus buttons on the tasks
+     * it should have the following conditions met to function
+     * ## The button is not active yet
+     * The button, when clicked, has no active status yet 
+     * + should get the active class assigned 
+     * + should reveal the task-customization board
+     * + should fill the task-customization board through the populateForm method
+     * ## The button is active and in focus (the task details are revealed):
+     * + should simply close the task details board
+     * + then remove the active class from the other buttons
+     * ## the button is active and not in focus ()
+     * @param ev event of mouse clicked
+     * @param taskChildrenParent the parent of the task children elements
+     */
+    private taskButtonContext(ev: MouseEvent, taskChildrenParent: HTMLElement | null) {
+        let target = ev.target as HTMLElement
+        let taskContent = document.getElementById("task-content") as HTMLParagraphElement
+
+        let taskTitle = taskContent.textContent?.slice(
+            0,
+            taskContent.textContent.indexOf(" -- ")
+        )
+        let taskBoard = document.getElementById("task-customization")
+        if (target.dataset.name !== undefined && taskBoard !== null) {
+            // inactive button
+            if (target.classList.contains("active") === false){
+                this.populateForm(target.dataset.name)
+                target.classList.add("active")
+                taskBoard.classList.remove("hidden")
+                console.log("a");
+                
+            }
+            // active button 
+            else if (target.classList.contains("active") === true){
+                if (taskTitle === target.dataset.name) {
+                    taskBoard.classList.toggle("hidden")
+                } else if (taskTitle !== target.dataset.name) {
+                    taskBoard.classList.remove("hidden")
+                    this.populateForm(target.dataset.name)
+                }
+                console.log("b")
+                
+            }
+        }else {
+            console.log("Something is wrong with the function taskButtonContext")
+        }
     }
 
     removeActiveFromButtons() {
         let doneContainer = document.getElementById("done")
         let notDoneContainer = document.getElementById("not-done")
         if (doneContainer?.children.length === undefined) console.log("content is undefined")
+
         else {
+            console.log("I am the not done container")
             for (let index = 0; index < doneContainer.children.length - 1; index++) {
                 console.log(doneContainer.children[index]);
             }
         }
         if (notDoneContainer?.children.length === undefined) console.log("content is undefined")
         else {
+            console.log("I am the done container")
             for (let index = 0; index < notDoneContainer.children.length - 1; index++) {
                 notDoneContainer.children[index].firstElementChild?.classList.remove("active")
             }
         }
-
-
     }
 
     pushToDoneOrUndoneContainer(target: HTMLElement, id: string) {
@@ -218,20 +234,19 @@ export class DOMManager {
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
-        
+
         taskTitleAndContent.textContent = todo.title + " -- " + todo.description
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
-        
+
         for (let i = 0; i < subTaskList.children.length + 1; i++) {
             let child = subTaskList.children[0] as HTMLLIElement
             if (child.className === "subtask-child") {
                 subTaskList.removeChild(child)
             }
         }
-        
+
         if (Object.keys(todo.checklist).length > 0) {
-            console.log(todo.checklist)            
             for (let key in todo.checklist) {
 
                 if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
@@ -243,7 +258,7 @@ export class DOMManager {
                     img.src = NotDone
                     img.classList.add("subdone-img")
                     let liDiv = document.createElement("div")
-                    li.append(img,liDiv)
+                    li.append(img, liDiv)
 
                     let spanElement = document.createElement("span") as HTMLSpanElement
                     spanElement.contentEditable = "true"
@@ -261,14 +276,12 @@ export class DOMManager {
                     )
                 }
             }
-        } else {
-            console.log("subtasks empty")
         }
 
         let radChildren = document.getElementsByClassName("repeat-add-due-child")
-        
+
         let date = radChildren[2].querySelector("span")
-        if(todo.dueDate !== "") date!.textContent = todo.dueDate
+        if (todo.dueDate !== "") date!.textContent = todo.dueDate
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
@@ -309,95 +322,65 @@ export class DOMManager {
         }
     }
     /**
-     * This function is going to be incorporating several different methods depemnding on the 
-     * DOM elements.
+     * This function is going to be incorporating several different methods to hook event delegations regarding the 
+     * parents to the task customization. 
      */
-    formContext () {
-        let taskParent = document.getElementById("task-parent")
-        taskParent!.onclick = (ev: MouseEvent) => {
-            console.log(ev.target)
-            let element = ev.target as HTMLElement
-            if (element === undefined) return
-            
-            switch (element.id) {
-                case "close-task-customization":
-                    this.closeMenu();
-                    break;
-                case "task-description-container":
-                    this.taskDescriptionContext(ev)
-                    break;
-                case "subtask-list-container":
-                    this.subtaskListContext(ev)
-                    break;
-                case "add-to-my-day-container":
-                    this.addToMyDayContext(ev)
-                    break;
-                case "repeat-add-due-container":
-                    this.radContext(ev)
-                    break;
-                case "due-by-submenu":
-                    this.dueBySubmenuContext(ev)
-                    break;
-                case "due-by-date-submenu":
-                    this.dueByDateSubmenuContext(ev)
-                    break;
-                case "repeat-submenu":
-                    this.repeatSubmenuContext(ev)
-                    break;
-                case "project-choose":
-                    this.projectChooseContext(ev) // later
-                    break;
-                case "cycle-container":
-                    this.cycleContainerContext(ev)
-                    break;
-                case "cycles-container":
-                    this.cyclesContainerContext(ev)
-                    break;
-                case "notes":
-                    this.notesContext(ev)
-                    break;
-                default:
-                    console.log("not implemented")
-                    break;
-            }
+    formContext() {
+        this.closeMenu()
 
-        
-        }
+        this.taskDescriptionContext()
+        this.subtaskListContext()
+        this.addToMyDayContext()
+        this.radContext()
+        this.dueBySubmenuContext()
+        this.dueByDateSubmenuContext()
+        this.repeatSubmenuContext()
+        this.projectChooseContext()
+        this.cycleSubmenuContext()
+        this.cyclesContainerContext()//
+        this.notesContext()
     }
+
     closeMenu() {
+        let closeButton = document.getElementById('close-task-customization')
+        closeButton?.addEventListener('click', () => {
+            document.getElementById('task-customization')?.classList.toggle("hidden")
+            this.removeActiveFromButtons()
+        })
+    }
+    taskDescriptionContext() {
+        document.getElementById('task-description-container')?.addEventListener("click", (ev: MouseEvent) => {
+            console.log(ev.target)
+        })
+    }
+    subtaskListContext() {
         throw new Error('Method not implemented.')
     }
-    taskDescriptionContext(ev: MouseEvent) {
+    addToMyDayContext() {
         throw new Error('Method not implemented.')
     }
-    subtaskListContext(ev: MouseEvent) {
+    radContext() {
         throw new Error('Method not implemented.')
     }
-    addToMyDayContext(ev: MouseEvent) {
+    dueBySubmenuContext() {
         throw new Error('Method not implemented.')
     }
-    radContext(ev: MouseEvent) {
+    dueByDateSubmenuContext() {
         throw new Error('Method not implemented.')
     }
-    dueBySubmenuContext(ev: MouseEvent) {
+    repeatSubmenuContext() {
         throw new Error('Method not implemented.')
     }
-    dueByDateSubmenuContext(ev: MouseEvent) {
+    projectChooseContext() {
         throw new Error('Method not implemented.')
     }
-    repeatSubmenuContext(ev: MouseEvent) {
+    cycleSubmenuContext() {
         throw new Error('Method not implemented.')
     }
-    projectChooseContext(ev: MouseEvent) {
+    cyclesContainerContext() {
         throw new Error('Method not implemented.')
     }
-    cycleContainerContext(ev: MouseEvent) {
-        throw new Error('Method not implemented.')
-    }
-    cyclesContainerContext(ev: MouseEvent) {
-        throw new Error('Method not implemented.')
-    }
-    notesContext(ev: MouseEvent) {
+    notesContext() {
         throw new Error('Method not implemented.')
     }
 }
