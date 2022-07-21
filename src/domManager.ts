@@ -23,8 +23,7 @@ import { Todo } from './todos'
  * use later for the TaskManager.
  */
 export class DOMManager {
-    //private task = ""
-    private done = false
+    task: null | Todo = null;
     storageManager: StorageManaging
 
     constructor(storageManager: StorageManaging) {
@@ -120,6 +119,7 @@ export class DOMManager {
         else {
             todos.forEach(todo => {
                 if (todo.done === false) {
+
                     this.addTaskToToDoListDOM(todo.title, "not-done")
                 } else {
                     this.addTaskToToDoListDOM(todo.title, "done")
@@ -151,7 +151,7 @@ export class DOMManager {
             }
             // the task-name is gone. I need to refactor the conditions below
             else if (nodeTarget.nodeName === "BUTTON") {
-                this.taskButtonContext(ev, taskChildrenParent)
+                this.taskButtonContext(ev)
             }
         })
     }
@@ -171,7 +171,7 @@ export class DOMManager {
      * @param ev event of mouse clicked
      * @param taskChildrenParent the parent of the task children elements
      */
-    private taskButtonContext(ev: MouseEvent, taskChildrenParent: HTMLElement | null) {
+    private taskButtonContext(ev: MouseEvent) {
         let target = ev.target as HTMLElement
         let taskContent = document.getElementById("task-content") as HTMLParagraphElement
 
@@ -182,15 +182,15 @@ export class DOMManager {
         let taskBoard = document.getElementById("task-customization")
         if (target.dataset.name !== undefined && taskBoard !== null) {
             // inactive button
-            if (target.classList.contains("active") === false){
+            if (target.classList.contains("active") === false) {
                 this.populateForm(target.dataset.name)
                 target.classList.add("active")
                 taskBoard.classList.remove("hidden")
                 console.log("a");
-                
+
             }
             // active button 
-            else if (target.classList.contains("active") === true){
+            else if (target.classList.contains("active") === true) {
                 if (taskTitle === target.dataset.name) {
                     taskBoard.classList.toggle("hidden")
                 } else if (taskTitle !== target.dataset.name) {
@@ -198,9 +198,9 @@ export class DOMManager {
                     this.populateForm(target.dataset.name)
                 }
                 console.log("b")
-                
+
             }
-        }else {
+        } else {
             console.log("Something is wrong with the function taskButtonContext")
         }
     }
@@ -230,7 +230,10 @@ export class DOMManager {
     }
     // not done yet, should return a "true" for 
     populateForm(taskname: string) {
+
         let todo = this.storageManager.getTask(taskname)
+        console.log(todo)
+        this.task = todo
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
@@ -322,45 +325,160 @@ export class DOMManager {
         }
     }
     /**
-     * This function is going to be incorporating several different methods to hook event delegations regarding the 
-     * parents to the task customization. 
+     * A function that is incorporating different subfunctions and eventlisteners to handle the task detail ui and changes 
+     * in the background, passing or loading these from the storageManager instance.
+     * 
      */
+
     formContext() {
         this.closeMenu()
-
+        // pass the todo to these, so the relevant information can be adjusted.
         this.taskDescriptionContext()
         this.subtaskListContext()
-        this.addToMyDayContext()
+        //this.addToMyDayContext()
         this.radContext()
         this.dueBySubmenuContext()
         this.dueByDateSubmenuContext()
         this.repeatSubmenuContext()
         this.projectChooseContext()
         this.cycleSubmenuContext()
-        this.cyclesContainerContext()//
+        this.cyclesContainerContext()
         this.notesContext()
     }
-
+    /**
+     * Simply closes the task details menu
+     */
     closeMenu() {
         let closeButton = document.getElementById('close-task-customization')
+
         closeButton?.addEventListener('click', () => {
             document.getElementById('task-customization')?.classList.toggle("hidden")
             this.removeActiveFromButtons()
         })
     }
+    /**
+     * Adds eventlistener to the task-container.
+     * 1. Detect mouseclicks
+     * 1.1 For the done image , change not only the image to the Done image src, 
+     *      but also the task, change done to true.
+     * 1.2 For the favorite image, i don'T  know.
+     * 1.3 For the paragraph: find out if the user stopped using the keydown event after 5 seconds
+     * 
+     */
     taskDescriptionContext() {
-        document.getElementById('task-description-container')?.addEventListener("click", (ev: MouseEvent) => {
-            console.log(ev.target)
+        let titleAndDescription = document.getElementById('task-content')
+        let timer: string | number | NodeJS.Timeout | undefined;
+        let text: string
+        document.getElementById('task-container')?.addEventListener("click", (ev: MouseEvent) => {
+            let element = ev.target as HTMLElement
+            if (element.id === "done-img") {
+                let elem = element as HTMLImageElement
+                if (elem.src === Done && this.task?.done === true) {
+                    elem.src = NotDone
+                    this.task.done = false
+                } else if (elem.src === NotDone && this.task?.done === false) {
+                    elem.src = Done
+                    this.task.done = true
+                }
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+
+            }
+            if (element.id === "favorite") {
+                console.log("favorite img clicked")
+            }
+        })
+        titleAndDescription?.addEventListener("keyup", (ev: KeyboardEvent) => {
+            if (titleAndDescription?.textContent !== undefined && titleAndDescription?.textContent !== null) {
+                text = titleAndDescription.textContent
+
+                clearTimeout(timer)
+
+                timer = setTimeout(() => {
+                    let title = text.slice(0, text.indexOf(" -- "))
+                    let description = text.slice(title.length + 4)
+                    if (title.length > 0) {
+                        this.task!.title = title
+                    }
+                    if (description.length > 0) {
+                        this.task!.description = description
+                    }
+                    this.storageManager.insertTaskObjectIntoStorage(title, this.task!)
+                }, 10000)
+            }
+        })
+
+    }
+    /**
+     * There are two EventListener methods here
+     * 1. on click event, which has three different parts
+     * 1.1. the subdone-img
+     * 1.2. the subtask-options
+     * 1.3. add subtask-button
+     * 2. keydown event
+     * 2.1 the lists of tasks
+     * 2.2 the add-subtask-text
+     */
+    subtaskListContext() {
+        let subtTaskListContainer = document.getElementById("subtask-list-container") as HTMLUListElement
+
+        subtTaskListContainer.addEventListener("click", (ev: MouseEvent) => {
+            let element = ev.target as HTMLElement
+            // check if the element is correctly selected
+            if (element.classList.contains("subdone-img")) {
+                //recast the element as HTMLImageElement and get the parent's dataset attribute
+                let parentDataset = element.parentElement?.dataset.name
+                let subdoneImg = ev.target as HTMLImageElement
+                // check if the checklist is false and the subdoneImg is equal to notDone
+                if (this.task?.checklist[`${parentDataset}`] === false && subdoneImg.src === NotDone) {
+                    this.task!.checklist[`${parentDataset}`] = true;
+                    subdoneImg.src = Done;
+                } else if (this.task?.checklist[`${parentDataset}`] === true && subdoneImg.src === Done) {
+                    this.task!.checklist[`${parentDataset}`] = false
+                    subdoneImg.src = NotDone
+                }
+            } else if (element.classList.contains("subtask-options")) {
+                throw new Error('Not implemented yet')
+
+            } else if (element.id === "add-subtask-button") {
+                let spanContent = element.nextElementSibling?.textContent
+                if (spanContent !== null && spanContent !== undefined && spanContent !== "Add to my day") {
+                    this.storageManager.insertSubtask(this.task!.title, spanContent)
+                    element.nextElementSibling!.textContent ="Next Step"
+                }
+            }
+            this.populateForm(this.task!.title)
+        })
+
+
+        //Keyuplistners
+        subtTaskListContainer.addEventListener("keyup", (ev:KeyboardEvent) => {
+            let element = ev.target as HTMLElement
+            if (element.classList.contains("add-subtask-text")) {
+                console.log("clicked the subtask editor")
+            }
         })
     }
-    subtaskListContext() {
-        throw new Error('Method not implemented.')
-    }
+    // later when the project class is defined and the testing works
     addToMyDayContext() {
-        throw new Error('Method not implemented.')
+       // throw new Error('Method not implemented.')
     }
+
     radContext() {
-        throw new Error('Method not implemented.')
+        let radParent = document.getElementById('repeat-add-due-container')
+        
+        radParent?.addEventListener('click', (ev: MouseEvent) => {
+            let elem = ev.target as HTMLElement;
+            console.log(elem)
+            if (elem.id.includes("event-repeat-")) {
+                document.getElementById("repeat-submenu")!.classList.toggle("hidden")
+            } else if (elem.id.includes("add-to-project-")) {
+                document.getElementById("project-choose")!.classList.toggle("hidden")
+            } else if (elem.id.includes("add-due-date-")) {
+                document.getElementById("due-by-date-submenu")!.classList.toggle("hidden")
+            } else if (elem.id.includes("add-priority-")) {
+                console.log(3)
+            }
+        })
     }
     dueBySubmenuContext() {
         throw new Error('Method not implemented.')
