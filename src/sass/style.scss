@@ -279,11 +279,9 @@ ul {
         left: 0.2rem;
     }
     
-    .reapeat-add-due-child > span {
+    .repeat-add-due-child > span {
         position: relative;
-        flex-grow: 1;
-        
-      
+        flex-grow: 1; 
     }
     .repeat-add-due-child:first-child {
         border-bottom: #9b9fab solid 1px;
@@ -295,6 +293,7 @@ ul {
         border-bottom: #9b9fab solid 1px;
     }        
     #cycles-container {
+        z-index: 0;
         display: flex;
         background-color: #323232;
         position: relative;
@@ -329,7 +328,6 @@ ul {
     } 
     
     #due-by-submenu {
-        display: none;
         position: absolute;
         z-index: 1;
         border: 1px solid white;
@@ -344,7 +342,6 @@ ul {
         background-color: #434343;
     }
     #due-by-date-submenu {
-        display: none;
         position: absolute;
         z-index: 1;
         padding: 1rem;
@@ -352,16 +349,14 @@ ul {
         border: 1px solid white;
     }
     #project-choose {
-        display: none;
         position: absolute;
-        z-index: 0;
+        z-index: 1;
         background-color: #323232;
         border: 1px white solid;
         padding: 1rem;
     }
     
     #cycle-container {
-        display: none;
         position: absolute;
         z-index: 1;
         background-color: #323232;
@@ -369,7 +364,6 @@ ul {
     }
     
     #repeat-submenu{
-        display: none;
         z-index: 1;
         position: absolute;
         background-color: #323232;
@@ -379,5 +373,5 @@ ul {
 
 
 .hidden{
-    //display: none;
+    display: none;
 }
