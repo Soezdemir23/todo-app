@@ -232,8 +232,7 @@ export class DOMManager {
     populateForm(taskname: string) {
 
         let todo = this.storageManager.getTask(taskname)
-        console.log(todo)
-        this.task = todo
+                this.task = todo
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
@@ -331,6 +330,7 @@ export class DOMManager {
      */
 
     formContext() {
+
         this.closeMenu()
         // pass the todo to these, so the relevant information can be adjusted.
         this.taskDescriptionContext()
@@ -443,18 +443,31 @@ export class DOMManager {
                 let spanContent = element.nextElementSibling?.textContent
                 if (spanContent !== null && spanContent !== undefined && spanContent !== "Add to my day") {
                     this.storageManager.insertSubtask(this.task!.title, spanContent)
-                    element.nextElementSibling!.textContent ="Next Step"
-                }
+                    element.nextElementSibling!.textContent ="Next Step here"
+                } 
             }
-            this.populateForm(this.task!.title)
-        })
-
+            
+        })        
 
         //Keyuplistners
-        subtTaskListContainer.addEventListener("keyup", (ev:KeyboardEvent) => {
-            let element = ev.target as HTMLElement
-            if (element.classList.contains("add-subtask-text")) {
-                console.log("clicked the subtask editor")
+        let text =""
+        let subtext = ""
+        subtTaskListContainer.addEventListener("keydown", (e: KeyboardEvent) => {
+            // just
+            if (e.key === "Enter" && this.task !== null) {
+                e.preventDefault()
+                let target = e.target as HTMLElement
+
+                // we can check if the parent of the element has a data attribute and then go from there
+                let dataAttribute = target.parentElement?.parentElement?.dataset.name
+                if(dataAttribute !== undefined && dataAttribute !== null && target.textContent?.length! > 0) {
+                    subtext = target.textContent! // the new text content
+                    this.storageManager.replaceSubTask(this.task, dataAttribute, subtext)
+                    this.populateForm(this.task.title!)
+                } else if (target.id==="add-subtask-text" && target.textContent?.length! > 0 && target.textContent?.includes("Next step") === false) {
+                    this.storageManager.insertSubtask(this.task!.title, target.textContent!)
+                }
+
             }
         })
     }
@@ -476,7 +489,7 @@ export class DOMManager {
             } else if (elem.id.includes("add-due-date-")) {
                 document.getElementById("due-by-date-submenu")!.classList.toggle("hidden")
             } else if (elem.id.includes("add-priority-")) {
-                console.log(3)
+                document.getElementById("d")
             }
         })
     }

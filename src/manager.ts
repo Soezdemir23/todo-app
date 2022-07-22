@@ -47,4 +47,19 @@ export class StorageManaging {
         this.localStorage.setItem(taskTitle, JSON.stringify(todo))
         console.log(todo.checklist)
     }
+    public replaceSubTask(todo: Todo, dataAttribute: string, newTask: string){
+        let checklistArray = Object.entries(todo.checklist)
+        checklistArray.forEach(element => {
+            if (element[0] === dataAttribute) {
+                element[0] = newTask
+            }
+        })
+        todo.checklist = {}
+        checklistArray.forEach(element => {
+            todo.checklist[element[0]] = element[1]
+        })
+        this.localStorage.removeItem(todo.title)
+        this.localStorage.setItem(todo.title, JSON.stringify(todo))
+    
+    }
 }
