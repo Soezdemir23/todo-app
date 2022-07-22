@@ -158,8 +158,19 @@
                 <p id="series" contenteditable="true">Enter series here</p>
                 <input type="datetime-local" name="cycle-date-time" id="cycle-time">
             </div>
-    
-    
+            
+            <div class="hidden" id="priority-submenu">
+                <span>importance</span>
+                <select name="priority" id="priority-select">
+                    <option value="-1">Choose Priority</option>
+                    <option value="0">Low importance [0]</option>
+                    <option value="1">Medium importance [1]</option>
+                    <option value="2">High importance [2]</option>
+                    <option value="3">Urgent importance [3]</option>
+                
+                </select>
+            </div>
+            
             <div id="cycles-container">
                 <div class="cycles-child">
                     <span class="date-child">3rd JAnuary 2023</span>

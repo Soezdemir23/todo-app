@@ -324,6 +324,12 @@ ul {
   background-color: #323232;
   border: solid 1px white;
 }
+#task-parent #priority-submenu {
+  z-index: 1;
+  position: absolute;
+  background-color: #323232;
+  border: solid 1px white;
+}
 
 .hidden {
   display: none;

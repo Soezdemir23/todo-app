@@ -467,7 +467,6 @@ export class DOMManager {
                 } else if (target.id==="add-subtask-text" && target.textContent?.length! > 0 && target.textContent?.includes("Next step") === false) {
                     this.storageManager.insertSubtask(this.task!.title, target.textContent!)
                 }
-
             }
         })
     }
@@ -489,7 +488,7 @@ export class DOMManager {
             } else if (elem.id.includes("add-due-date-")) {
                 document.getElementById("due-by-date-submenu")!.classList.toggle("hidden")
             } else if (elem.id.includes("add-priority-")) {
-                document.getElementById("d")
+                document.getElementById("priority-submenu")!.classList.toggle("hidden")
             }
         })
     }
@@ -514,4 +513,5 @@ export class DOMManager {
     notesContext() {
         throw new Error('Method not implemented.')
     }
+
 }
