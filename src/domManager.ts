@@ -17,6 +17,8 @@ import AddPriority from './img/priority_high.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
+import { getDate } from 'date-fns'
+import { cy, zhCN } from 'date-fns/locale'
 /**
  * DOMManager manages the I/O and handling of the DOM the user interacts with
  * it takes the values from the forms and input and saves them for the
@@ -25,6 +27,7 @@ import { Todo } from './todos'
 export class DOMManager {
     task: null | Todo = null;
     storageManager: StorageManaging
+    openSubmenus = 6;
 
     constructor(storageManager: StorageManaging) {
         this.storageManager = storageManager
@@ -145,6 +148,7 @@ export class DOMManager {
                     target.classList.remove("task-child-done")
                     target.classList.add("task-child-undone")
                     this.storageManager.changeDone(target.dataset.name!, false)
+                    target.style.textDecoration = "strikethrough"
                     this.pushToDoneOrUndoneContainer(target, "not-done")
                 }
 
@@ -169,9 +173,9 @@ export class DOMManager {
      * + then remove the active class from the other buttons
      * ## the button is active and not in focus ()
      * @param ev event of mouse clicked
-     * @param taskChildrenParent the parent of the task children elements
      */
     private taskButtonContext(ev: MouseEvent) {
+        this.closeAllSubmenus()
         let target = ev.target as HTMLElement
         let taskContent = document.getElementById("task-content") as HTMLParagraphElement
 
@@ -186,7 +190,10 @@ export class DOMManager {
                 this.populateForm(target.dataset.name)
                 target.classList.add("active")
                 taskBoard.classList.remove("hidden")
-                console.log("a");
+                setTimeout(() => {
+                    this.redrawSubmenus();
+                }
+                    , 500)
 
             }
             // active button 
@@ -197,7 +204,7 @@ export class DOMManager {
                     taskBoard.classList.remove("hidden")
                     this.populateForm(target.dataset.name)
                 }
-                console.log("b")
+
 
             }
         } else {
@@ -232,7 +239,7 @@ export class DOMManager {
     populateForm(taskname: string) {
 
         let todo = this.storageManager.getTask(taskname)
-                this.task = todo
+        this.task = todo
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
@@ -287,7 +294,7 @@ export class DOMManager {
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
-        if (todo.repeat !== undefined) repeat!.textContent = todo.repeat.toString()
+        if (todo.repeat !== undefined) repeat!.textContent = "0"; // this.storageManager.calculateRepeat(this.task!).toString() + " Days left until repeat"
         //added later when I am working on the project class
         let addProject = radChildren[1].querySelector("span")
 
@@ -310,6 +317,30 @@ export class DOMManager {
                 }
                 break;
         }
+
+        let cycleContainer = document.getElementById("cycles-container")
+        
+        let cyclesChild = document.createElement("div")
+        cyclesChild.classList.add("cycles-child")
+        
+        let dateChild = document.createElement("span")
+        dateChild.classList.add("date-child")
+        let dateOptions = document.createElement("span")
+        dateOptions.classList.add("date-options")
+        let dateImg = document.createElement("img") as HTMLImageElement
+        dateImg.alt = "date-options" 
+        dateImg.src = MoreVert
+        cyclesChild.append(dateChild, dateOptions)
+        dateOptions.appendChild(dateImg)
+        
+        console.log(this.task.cycle)
+        this.task.cycle?.forEach(date => {
+            let copy = cyclesChild?.cloneNode(true) as HTMLElement
+            copy.firstElementChild!.textContent = date
+            
+            cycleContainer?.append(copy)
+            
+        })
         /**
          * TODO: Add the other radchildren:
          * a. repeat
@@ -354,6 +385,7 @@ export class DOMManager {
         closeButton?.addEventListener('click', () => {
             document.getElementById('task-customization')?.classList.toggle("hidden")
             this.removeActiveFromButtons()
+            this.closeAllSubmenus()
         })
     }
     /**
@@ -383,7 +415,7 @@ export class DOMManager {
                 this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
 
             }
-            if (element.id === "favorite") {
+            if (element.id === "remove") {
                 console.log("favorite img clicked")
             }
         })
@@ -443,14 +475,13 @@ export class DOMManager {
                 let spanContent = element.nextElementSibling?.textContent
                 if (spanContent !== null && spanContent !== undefined && spanContent !== "Add to my day") {
                     this.storageManager.insertSubtask(this.task!.title, spanContent)
-                    element.nextElementSibling!.textContent ="Next Step here"
-                } 
+                    element.nextElementSibling!.textContent = "Next Step here"
+                }
             }
-            
-        })        
+
+        })
 
         //Keyuplistners
-        let text =""
         let subtext = ""
         subtTaskListContainer.addEventListener("keydown", (e: KeyboardEvent) => {
             // just
@@ -460,11 +491,12 @@ export class DOMManager {
 
                 // we can check if the parent of the element has a data attribute and then go from there
                 let dataAttribute = target.parentElement?.parentElement?.dataset.name
-                if(dataAttribute !== undefined && dataAttribute !== null && target.textContent?.length! > 0) {
+                if (dataAttribute !== undefined && dataAttribute !== null && target.textContent?.length! > 0) {
                     subtext = target.textContent! // the new text content
                     this.storageManager.replaceSubTask(this.task, dataAttribute, subtext)
                     this.populateForm(this.task.title!)
-                } else if (target.id==="add-subtask-text" && target.textContent?.length! > 0 && target.textContent?.includes("Next step") === false) {
+                    this.redrawSubmenus()
+                } else if (target.id === "add-subtask-text" && target.textContent?.length! > 0 && target.textContent?.includes("Next step") === false) {
                     this.storageManager.insertSubtask(this.task!.title, target.textContent!)
                 }
             }
@@ -472,46 +504,178 @@ export class DOMManager {
     }
     // later when the project class is defined and the testing works
     addToMyDayContext() {
-       // throw new Error('Method not implemented.')
+        // throw new Error('Method not implemented.')
     }
 
     radContext() {
         let radParent = document.getElementById('repeat-add-due-container')
-        
+
         radParent?.addEventListener('click', (ev: MouseEvent) => {
             let elem = ev.target as HTMLElement;
-            console.log(elem)
             if (elem.id.includes("event-repeat-")) {
+                this.closeAllSubmenus()
                 document.getElementById("repeat-submenu")!.classList.toggle("hidden")
             } else if (elem.id.includes("add-to-project-")) {
+                this.closeAllSubmenus()
                 document.getElementById("project-choose")!.classList.toggle("hidden")
             } else if (elem.id.includes("add-due-date-")) {
-                document.getElementById("due-by-date-submenu")!.classList.toggle("hidden")
+                this.closeAllSubmenus()
+                document.getElementById("due-by-submenu")!.classList.toggle("hidden")
             } else if (elem.id.includes("add-priority-")) {
+                this.closeAllSubmenus()
                 document.getElementById("priority-submenu")!.classList.toggle("hidden")
             }
         })
     }
+
     dueBySubmenuContext() {
-        throw new Error('Method not implemented.')
+        let dueBySubmenu = document.getElementById("due-by-submenu")
+        dueBySubmenu?.addEventListener("click", (ev: MouseEvent) => {
+            let element = ev.target as HTMLElement
+            if (element.textContent === "Today") {
+                console.log("Today clicked")
+            } else if (element.textContent === "Tomorrow") {
+                console.log("Tomorrow clicked")
+            } else if (element.textContent === "Next Week") {
+                console.log("Next Week clicked")
+            } else if (element.textContent === "Pick a date") {
+                document.getElementById("due-by-date-submenu")?.classList.toggle("hidden")
+                dueBySubmenu!.classList.toggle("hidden")
+            }
+        })
+
     }
     dueByDateSubmenuContext() {
-        throw new Error('Method not implemented.')
+        console.log('Method not implemented.')
     }
     repeatSubmenuContext() {
-        throw new Error('Method not implemented.')
+        let repeatSubmenu = document.getElementById("repeat-submenu")
+        repeatSubmenu?.addEventListener("click", (ev: MouseEvent) => {
+            let element = ev.target as HTMLElement
+            if (element.textContent === "daily") {
+                this.task!.repeat = 1
+                this.populateForm(this.task!.title)
+            } else if (element.textContent === "weekly") {
+                this.task!.repeat = 7
+                this.populateForm(this.task!.title)
+            } else if (element.textContent === "Monthly") {
+                this.task!.repeat = 28
+                this.populateForm(this.task!.title)
+            } else if (element.textContent === "Create a cycle") {
+                repeatSubmenu?.classList.toggle("hidden")
+                document.getElementById("cycle-container")?.classList.toggle("hidden")
+            }
+            this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+        })
     }
     projectChooseContext() {
-        throw new Error('Method not implemented.')
+        console.log('Method not implemented.')
     }
     cycleSubmenuContext() {
-        throw new Error('Method not implemented.')
+        let series = document.getElementById("series") as HTMLParagraphElement
+        let cycleStart = document.getElementById("cycle-time") as HTMLDataElement
+        let date: Date
+        series.addEventListener("keypress", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                if (series.textContent !== null && series.textContent.length > 0 &&
+                    /[a-zA-Z]/i.test(series.textContent) === false && cycleStart.value !== "") {
+
+
+                    date = new Date(cycleStart.value);
+                    console.log(date)
+                    this.storageManager.handleCycle(this.task!.title, series.textContent, date)
+                    series.textContent = "Check the dates below this menu"
+                    this.closeAllSubmenus()
+
+                } else {
+                    series.textContent = "There has been an error, please enter numbers, seperated by commas"
+                }
+            }
+        })
     }
     cyclesContainerContext() {
-        throw new Error('Method not implemented.')
+        let cyclesContainer = document.getElementById("cycles-container")
+        cyclesContainer?.addEventListener("click", (ev: MouseEvent) => {
+            let target = ev.target as HTMLElement
+            cyclesContainer?.removeChild(target)
+        })
+        console.log('Method not implemented.')
     }
     notesContext() {
-        throw new Error('Method not implemented.')
+        let content = document.getElementById("notes")?.getElementsByTagName("p")[0] as HTMLParagraphElement
+        let text = ""
+        let timer: string | number | NodeJS.Timeout | undefined
+        content.addEventListener("keypress", (e: KeyboardEvent) => {
+            if (content.textContent !== null && content.textContent!=="Add note") {
+                text = content.textContent
+
+                clearTimeout(timer)
+
+                timer = setTimeout(() =>{
+                    this.task!.notes = text
+                    this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                }, 5000)
+            }
+        })
+        console.log('Method not implemented.')
     }
 
+
+    redrawSubmenus() {
+        /**
+         * 0. due-by.submenu
+         * 1. due.by.date
+         * 2. repeat-submenu
+         * 3. project-choose
+         * 4. cycle-container
+         * 5. priority submenu
+         */
+        let radChildren = document.getElementsByClassName("repeat-add-due-child")
+
+        let submenus = document.getElementsByClassName("submenus") as HTMLCollectionOf<HTMLElement>
+
+        submenus[2].style.left = `${radChildren[0].getBoundingClientRect().left + radChildren[0].clientWidth * 0.35}px`
+        submenus[2].style.top = `${radChildren[0].getBoundingClientRect().top + radChildren[0].clientHeight}px`
+        submenus[4].style.left = `${radChildren[0].getBoundingClientRect().left + radChildren[0].clientWidth * 0.015}px`
+        submenus[4].style.top = `${radChildren[0].getBoundingClientRect().top + radChildren[0].clientHeight}px`
+        submenus[3].style.left = `${radChildren[1].getBoundingClientRect().left + radChildren[1].clientWidth * 0.225}px`
+        submenus[3].style.top = `${radChildren[1].getBoundingClientRect().top + radChildren[1].clientHeight}px`
+        submenus[0].style.left = `${radChildren[2].getBoundingClientRect().left + radChildren[2].clientWidth * 0.3}px`
+        submenus[0].style.top = `${radChildren[2].getBoundingClientRect().top + radChildren[2].clientHeight}px`
+        submenus[1].style.left = `${radChildren[2].getBoundingClientRect().left + radChildren[2].clientWidth * 0.11}px`
+        submenus[1].style.top = `${radChildren[2].getBoundingClientRect().top + radChildren[2].clientHeight}px`
+        submenus[5].style.left = `${radChildren[3].getBoundingClientRect().left + radChildren[3].clientWidth * 0.04}px`
+        submenus[5].style.top = `${radChildren[3].getBoundingClientRect().top + radChildren[3].clientHeight}px`
+        window.addEventListener("resize", () => {
+            setTimeout(() => {
+                submenus[2].style.left = `${radChildren[0].getBoundingClientRect().left + radChildren[0].clientWidth * 0.35}px`
+                submenus[2].style.top = `${radChildren[0].getBoundingClientRect().top + radChildren[0].clientHeight}px`
+                submenus[4].style.left = `${radChildren[0].getBoundingClientRect().left + radChildren[0].clientWidth * 0.015}px`
+                submenus[4].style.top = `${radChildren[0].getBoundingClientRect().top + radChildren[0].clientHeight}px`
+                submenus[3].style.left = `${radChildren[1].getBoundingClientRect().left + radChildren[1].clientWidth * 0.225}px`
+                submenus[3].style.top = `${radChildren[1].getBoundingClientRect().top + radChildren[1].clientHeight}px`
+                submenus[0].style.left = `${radChildren[2].getBoundingClientRect().left + radChildren[2].clientWidth * 0.3}px`
+                submenus[0].style.top = `${radChildren[2].getBoundingClientRect().top + radChildren[2].clientHeight}px`
+                submenus[1].style.left = `${radChildren[2].getBoundingClientRect().left + radChildren[2].clientWidth * 0.11}px`
+                submenus[1].style.top = `${radChildren[2].getBoundingClientRect().top + radChildren[2].clientHeight}px`
+                submenus[5].style.left = `${radChildren[3].getBoundingClientRect().left + radChildren[3].clientWidth * 0.025}px`
+                submenus[5].style.top = `${radChildren[3].getBoundingClientRect().top + radChildren[3].clientHeight}px`
+            }, 1000)
+        })
+    }
+
+
+    /**
+     * Takes the class related global variable openSubmenus as a variable to check how many popupmenus are active.
+     * if the usesr clicks the radChildren, then the hidden class is toggled
+     * the number of hidden classes are going down by one
+     * here fro 6 to five.
+     * 
+     */
+    closeAllSubmenus() {
+        let submenus = document.getElementsByClassName("submenus");
+        for (let i = 0; i < submenus.length; i++) {
+            submenus[i].classList.add("hidden");
+        }
+    }
 }

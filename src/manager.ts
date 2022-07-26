@@ -1,6 +1,7 @@
 
 import { Todo } from "./todos";
-
+import { addDays } from "date-fns";
+import format from "date-fns/format";
 /**
  * There is StorageManager, but that name is already taken by the libraries.
  * It's job is to look for tasks in the background and pass it to the domManager
@@ -60,6 +61,39 @@ export class StorageManaging {
         })
         this.localStorage.removeItem(todo.title)
         this.localStorage.setItem(todo.title, JSON.stringify(todo))
-    
+    }
+
+    public handleCycle(title: string ,cycle: string,startDate: Date) {
+        let task: Todo = JSON.parse(this.localStorage.getItem(title)!)
+        this.localStorage.removeItem(title)
+        let newCycleArray = cycle.split(",")
+        let cycleSinceStart: string[] = []
+        newCycleArray.forEach(element => {
+            if (parseInt(element) !== NaN) {
+                let added = format(addDays(startDate, parseInt(element)), "do MMMM yyyy")
+                cycleSinceStart.push(added)
+            }
+        })
+        task.cycle = cycleSinceStart
+        this.localStorage.setItem(title, JSON.stringify(task))
+    }
+    //how do I manage the date 
+    public handleRepeat(task: Todo, repeat: number) {
+        task.repeatDate = new Date()
+        addDays(task.repeatDate, repeat)
+        console.log(task)
+        this.insertTaskObjectIntoStorage(task.title, task)
+    }
+
+    public calculateRepeat(task:Todo): number {
+        let currentDate = new Date()
+        let leftDays=0
+        if(task.repeatDate !== undefined) {
+            console.log(typeof(task.repeatDate))
+            leftDays = (currentDate.getTime() - task.repeatDate?.getTime()) / (1000*3600*24)
+            console.log(leftDays)
+        }
+        return leftDays;
     }
 }
+

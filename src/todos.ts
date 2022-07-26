@@ -1,17 +1,21 @@
 
 
 export class Todo {
-     title
-     description
-     dueDate
-     priority
-     notes
-     done;
-     checklist;
-     repeat;
+    title
+    description
+    dueDate
+    priority
+    notes
+    done;
+    checklist;
+    repeat;
+    repeatDate;
+    cycle;
 
-    
-    constructor(title: string, description: string="", done:boolean = false, dueDate: string ="", priority: number = 0,  checklist: any = {}, notes?: string|undefined, repeat?: number | undefined) {
+    constructor(
+        title: string, description: string = "", done: boolean = false, dueDate: string = "",
+        priority: number = 0, checklist: any = {}, notes?: string | undefined, repeat?: number | undefined, 
+        repeatDate?: Date |undefined, cycle?: string[] | undefined) {
         this.title = title;
         this.description = description
         this.dueDate = dueDate
@@ -20,6 +24,8 @@ export class Todo {
         this.done = done
         this.checklist = checklist
         this.repeat = repeat
+        this.cycle = cycle
+        this.repeatDate = repeatDate
     }
     public info() {
         return {
@@ -29,7 +35,8 @@ export class Todo {
             "priority": this.priority,
             "notes": this.notes,
             "checklist": {},
-            "repeat": this.repeat
+            "repeat": this.repeat,
+            "cycle": this.cycle
         }
     }
 }
