@@ -237,7 +237,6 @@ export class DOMManager {
     }
     // not done yet, should return a "true" for 
     populateForm(taskname: string) {
-
         let todo = this.storageManager.getTask(taskname)
         this.task = todo
 
@@ -248,11 +247,12 @@ export class DOMManager {
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
 
-        for (let i = 0; i < subTaskList.children.length + 1; i++) {
+        for (let i = 0; i < subTaskList.children.length; i++) {
+
             let child = subTaskList.children[0] as HTMLLIElement
-            if (child.className === "subtask-child") {
-                subTaskList.removeChild(child)
-            }
+            if (child.className !== "subtask-child") continue
+            subTaskList.removeChild(child)
+             
         }
 
         if (Object.keys(todo.checklist).length > 0) {
@@ -269,7 +269,7 @@ export class DOMManager {
                         img.src = NotDone
                     } else {
                         img.src = Done
-                    }
+                    } 
                     img.classList.add("subdone-img")
                     let liDiv = document.createElement("div")
                     li.append(img, liDiv)
@@ -358,6 +358,7 @@ export class DOMManager {
         } else {
             notesElement.textContent = "Add note"
         }
+    
     }
     /**
      * A function that is incorporating different subfunctions and eventlisteners to handle the task detail ui and changes 
@@ -429,7 +430,6 @@ export class DOMManager {
                 text = titleAndDescription.textContent
 
                 clearTimeout(timer)
-
                 timer = setTimeout(() => {
                     let title = text.slice(0, text.indexOf(" -- "))
                     let description = text.slice(title.length + 4)
@@ -443,7 +443,6 @@ export class DOMManager {
                 }, 10000)
             }
         })
-
     }
     /**
      * There are two EventListener methods here
@@ -613,6 +612,9 @@ export class DOMManager {
     }
     cyclesContainerContext() {
         let cyclesContainer = document.getElementById("cycles-container")
+        if (cyclesContainer!.childElementCount === 0) cyclesContainer!.style.display = "none";
+        else cyclesContainer!.style.display = "block"
+        console.log(" bing bang bahoo")
         cyclesContainer?.addEventListener("click", (ev: MouseEvent) => {
             let target = ev.target as HTMLElement
             cyclesContainer?.removeChild(target)
