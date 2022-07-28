@@ -263,8 +263,13 @@ export class DOMManager {
                     li.classList.add("subtask-child")
                     li.dataset.name = key
                     //done/not done image
+                    
                     let img = document.createElement("img") as HTMLImageElement
-                    img.src = NotDone
+                    if(todo.checklist[key] === false) {
+                        img.src = NotDone
+                    } else {
+                        img.src = Done
+                    }
                     img.classList.add("subdone-img")
                     let liDiv = document.createElement("div")
                     li.append(img, liDiv)
@@ -294,7 +299,7 @@ export class DOMManager {
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
-        if (todo.repeat !== undefined) repeat!.textContent = "0"; // this.storageManager.calculateRepeat(this.task!).toString() + " Days left until repeat"
+        if (todo.repeat !== undefined) repeat!.textContent = this.storageManager.calculateDateDifference(new Date(), this.task!.repeatDate!) + " Days left until repeat"
         //added later when I am working on the project class
         let addProject = radChildren[1].querySelector("span")
 
@@ -468,6 +473,7 @@ export class DOMManager {
                     this.task!.checklist[`${parentDataset}`] = false
                     subdoneImg.src = NotDone
                 }
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
             } else if (element.classList.contains("subtask-options")) {
                 throw new Error('Not implemented yet')
 
@@ -559,17 +565,19 @@ export class DOMManager {
             let element = ev.target as HTMLElement
             if (element.textContent === "daily") {
                 this.task!.repeat = 1
-                this.task!.repeatDate = new Date()
+                this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 1)
                 console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "weekly") {
                 this.task!.repeat = 7
                 this.task!.repeatDate = new Date()
+                this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 7)
                 console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Monthly") {
                 this.task!.repeat = 28
                 this.task!.repeatDate = new Date()
+                this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 28)
                 console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Create a cycle") {
