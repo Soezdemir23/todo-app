@@ -17,7 +17,7 @@ import AddPriority from './img/priority_high.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
-import { getDate } from 'date-fns'
+import { getDate, sub } from 'date-fns'
 import { cy, zhCN } from 'date-fns/locale'
 /**
  * DOMManager manages the I/O and handling of the DOM the user interacts with
@@ -247,13 +247,9 @@ export class DOMManager {
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
 
-        for (let i = 0; i < subTaskList.children.length; i++) {
-
-            let child = subTaskList.children[0] as HTMLLIElement
-            if (child.className !== "subtask-child") continue
-            subTaskList.removeChild(child)
-             
-        }
+        Array.from(subTaskList.children).forEach(child => {
+            if (child.className === "subtask-child") subTaskList.removeChild(child)
+        })
 
         if (Object.keys(todo.checklist).length > 0) {
             for (let key in todo.checklist) {
