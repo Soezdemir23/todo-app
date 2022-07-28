@@ -476,9 +476,9 @@ export class DOMManager {
                 if (spanContent !== null && spanContent !== undefined && spanContent !== "Add to my day") {
                     this.storageManager.insertSubtask(this.task!.title, spanContent)
                     element.nextElementSibling!.textContent = "Next Step here"
+                    this.populateForm(this.task!.title)
                 }
             }
-
         })
 
         //Keyuplistners
@@ -498,6 +498,7 @@ export class DOMManager {
                     this.redrawSubmenus()
                 } else if (target.id === "add-subtask-text" && target.textContent?.length! > 0 && target.textContent?.includes("Next step") === false) {
                     this.storageManager.insertSubtask(this.task!.title, target.textContent!)
+                    this.populateForm(this.task!.title!)
                 }
             }
         })
@@ -508,9 +509,9 @@ export class DOMManager {
     }
 
     radContext() {
-        let radParent = document.getElementById('repeat-add-due-container')
+        let screen = document.body
 
-        radParent?.addEventListener('click', (ev: MouseEvent) => {
+        screen?.addEventListener('click', (ev: MouseEvent) => {
             let elem = ev.target as HTMLElement;
             if (elem.id.includes("event-repeat-")) {
                 this.closeAllSubmenus()
@@ -524,6 +525,8 @@ export class DOMManager {
             } else if (elem.id.includes("add-priority-")) {
                 this.closeAllSubmenus()
                 document.getElementById("priority-submenu")!.classList.toggle("hidden")
+            } else {
+                this.closeAllSubmenus()
             }
         })
     }
@@ -533,7 +536,9 @@ export class DOMManager {
         dueBySubmenu?.addEventListener("click", (ev: MouseEvent) => {
             let element = ev.target as HTMLElement
             if (element.textContent === "Today") {
+                
                 console.log("Today clicked")
+
             } else if (element.textContent === "Tomorrow") {
                 console.log("Tomorrow clicked")
             } else if (element.textContent === "Next Week") {
@@ -554,22 +559,27 @@ export class DOMManager {
             let element = ev.target as HTMLElement
             if (element.textContent === "daily") {
                 this.task!.repeat = 1
+                this.task!.repeatDate = new Date()
+                console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "weekly") {
                 this.task!.repeat = 7
+                this.task!.repeatDate = new Date()
+                console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Monthly") {
                 this.task!.repeat = 28
+                this.task!.repeatDate = new Date()
+                console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Create a cycle") {
                 repeatSubmenu?.classList.toggle("hidden")
                 document.getElementById("cycle-container")?.classList.toggle("hidden")
             }
-            this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
         })
     }
     projectChooseContext() {
-        console.log('Method not implemented.')
+        
     }
     cycleSubmenuContext() {
         let series = document.getElementById("series") as HTMLParagraphElement
@@ -678,4 +688,12 @@ export class DOMManager {
             submenus[i].classList.add("hidden");
         }
     }
+    counthiddenSubmenus(): number {
+        let submenus = document.getElementsByClassName("submenus");
+        let count =0
+        for (let i = 0; i < submenus.length; i++) {
+            if (submenus[i].classList.contains("hidden")) count++;
+
+        } return count;
+    } 
 }
