@@ -291,7 +291,7 @@ export class DOMManager {
         let radChildren = document.getElementsByClassName("repeat-add-due-child")
 
         let date = radChildren[2].querySelector("span")
-        if (this.task.dueDate !== "") date!.textContent = this.task!.dueDate
+        if (this.task.dueDate !== "" && this.task.dueDate !== undefined) date!.textContent = this.task!.dueDate?.toString()
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
@@ -356,7 +356,7 @@ export class DOMManager {
          * b. Add Project -> Project name
          * c. Priority
         */
-        let notesElement = document.getElementById("notes") as HTMLParagraphElement
+        let notesElement = document.getElementById("notes-content")as HTMLParagraphElement
         if (this.task!.notes !== undefined) {
             notesElement.textContent = this.task!.notes
         } else {
@@ -516,7 +516,7 @@ export class DOMManager {
     addToMyDayContext() {
         // throw new Error('Method not implemented.')
     }
-
+    // TODO: Doesn't close when it is clicked outside of the radContext. I haven't solved the logic of this yet.
     radContext() {
         let screen = document.body
 
@@ -534,9 +534,9 @@ export class DOMManager {
             } else if (elem.id.includes("add-priority-")) {
                 this.closeAllSubmenus()
                 document.getElementById("priority-submenu")!.classList.toggle("hidden")
-            } else if (elem.classList.contains("submenus")) {
+            } else if (elem.classList.contains("submenus") !== false) {
                 this.closeAllSubmenus()
-            }
+            } 
         })
     }
 
@@ -545,13 +545,19 @@ export class DOMManager {
         dueBySubmenu?.addEventListener("click", (ev: MouseEvent) => {
             let element = ev.target as HTMLElement
             if (element.textContent === "Today") {
-
-                console.log("Today clicked")
-
+                this.task!.dueDate = new Date()
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                this.populateForm(this.task!.title)
             } else if (element.textContent === "Tomorrow") {
                 console.log("Tomorrow clicked")
+                this.task!.dueDate = this.storageManager.addDaysToRepeat(new Date(), 1)
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                this.populateForm(this.task!.title)
             } else if (element.textContent === "Next Week") {
                 console.log("Next Week clicked")
+                this.task!.dueDate = this.storageManager.addDaysToRepeat(new Date(), 7)
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                this.populateForm(this.task!.title)
             } else if (element.textContent === "Pick a date") {
                 document.getElementById("due-by-date-submenu")?.classList.toggle("hidden")
                 dueBySubmenu!.classList.toggle("hidden")
@@ -559,7 +565,22 @@ export class DOMManager {
         })
 
     }
+    // TODO: implement the dueBySubmenuContext
     dueByDateSubmenuContext() {
+        let date = document.getElementById("due-by-date-submenu") as HTMLDataElement
+        let timer: string | number | NodeJS.Timeout |undefined
+        date?.addEventListener("click", () => {
+            
+            clearTimeout(timer)
+
+            timer = setTimeout(() => {
+                
+                if (date.value !== "") return 
+
+                else console.log(date.value);this.task!.dueDate = new Date(date.value)
+
+            }, 3000)
+        })
         console.log('Method not implemented.')
     }
     repeatSubmenuContext() {
@@ -590,6 +611,7 @@ export class DOMManager {
             }
         })
     }
+    // TODO: work on the project class and see how I can fit it into the project, then start implementing this.
     projectChooseContext() {
 
     }
@@ -615,6 +637,7 @@ export class DOMManager {
             }
         })
     }
+    // TODO: After creating the series, check the status of this element
     cyclesContainerContext() {
         let cyclesContainer = document.getElementById("cycles-container")
         if (cyclesContainer!.childElementCount === 0) cyclesContainer!.style.display = "none";
@@ -625,13 +648,14 @@ export class DOMManager {
         })
         console.log('Method not implemented.')
     }
+    //TODO: Test the notescontext
     notesContext() {
-        let content = document.getElementById("notes")?.getElementsByTagName("p")[0] as HTMLParagraphElement
+        let content = document.getElementById("notes")
         let text = ""
         let timer: string | number | NodeJS.Timeout | undefined
-        content.addEventListener("keypress", (e: KeyboardEvent) => {
-            if (content.textContent !== null && content.textContent !== "Add note") {
-                text = content.textContent
+        content?.addEventListener("keypress", (e: KeyboardEvent) => {
+            if (content?.textContent !== null && content?.textContent !== "Add note") {
+                text = content!.textContent
 
                 clearTimeout(timer)
 
