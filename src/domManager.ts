@@ -237,13 +237,13 @@ export class DOMManager {
     }
     // not done yet, should return a "true" for 
     populateForm(taskname: string) {
-        let todo = this.storageManager.getTask(taskname)
-        this.task = todo
+        this.task = this.storageManager.getTask(taskname)
+        
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
 
-        taskTitleAndContent.textContent = todo.title + " -- " + todo.description
+        taskTitleAndContent.textContent = this.task!.title + " -- " + this.task!.description
 
         let subTaskList = document.getElementById("subtask-list-container") as HTMLUListElement // HTMLCollectionOf<Element>
 
@@ -251,21 +251,21 @@ export class DOMManager {
             if (child.className === "subtask-child") subTaskList.removeChild(child)
         })
 
-        if (Object.keys(todo.checklist).length > 0) {
-            for (let key in todo.checklist) {
+        if (Object.keys(this.task!.checklist).length > 0) {
+            for (let key in this.task!.checklist) {
 
-                if (Object.prototype.hasOwnProperty.call(todo.checklist, key)) {
+                if (Object.prototype.hasOwnProperty.call(this.task!.checklist, key)) {
                     let li = document.createElement("li")
                     li.classList.add("subtask-child")
                     li.dataset.name = key
                     //done/not done image
-                    
+
                     let img = document.createElement("img") as HTMLImageElement
-                    if(todo.checklist[key] === false) {
+                    if (this.task!.checklist[key] === false) {
                         img.src = NotDone
                     } else {
                         img.src = Done
-                    } 
+                    }
                     img.classList.add("subdone-img")
                     let liDiv = document.createElement("div")
                     li.append(img, liDiv)
@@ -291,16 +291,24 @@ export class DOMManager {
         let radChildren = document.getElementsByClassName("repeat-add-due-child")
 
         let date = radChildren[2].querySelector("span")
-        if (todo.dueDate !== "") date!.textContent = todo.dueDate
+        if (this.task.dueDate !== "") date!.textContent = this.task!.dueDate
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
-        if (todo.repeat !== undefined) repeat!.textContent = this.storageManager.calculateDateDifference(new Date(), this.task!.repeatDate!) + " Days left until repeat"
+        if (this.task.repeat === undefined && this.task.repeatDate === undefined) {  
+            repeat!.textContent = "Repeat"
+        } else {
+            repeat!.textContent = this.storageManager.calculateDateDifference(
+                new Date(), // the current date
+                this.task!.repeatDate! // the date used to subtract from
+            );
+        }
+        
         //added later when I am working on the project class
         let addProject = radChildren[1].querySelector("span")
 
         let priority = radChildren[3].querySelector("span")
-        switch (todo.priority) {
+        switch (this.task!.priority) {
             case 0:
                 priority!.textContent = "Low importance [0]"
                 break;
@@ -311,7 +319,7 @@ export class DOMManager {
             case 3:
                 priority!.textContent = "high importance [3]"
             default:
-                if (todo.priority !== undefined) {
+                if (this.task!.priority !== undefined) {
                     priority!.textContent = "Set Priority"
                 } else {
                     priority!.textContent = "Invalid Priority"
@@ -320,27 +328,27 @@ export class DOMManager {
         }
 
         let cycleContainer = document.getElementById("cycles-container")
-        
+
         let cyclesChild = document.createElement("div")
         cyclesChild.classList.add("cycles-child")
-        
+
         let dateChild = document.createElement("span")
         dateChild.classList.add("date-child")
         let dateOptions = document.createElement("span")
         dateOptions.classList.add("date-options")
         let dateImg = document.createElement("img") as HTMLImageElement
-        dateImg.alt = "date-options" 
+        dateImg.alt = "date-options"
         dateImg.src = MoreVert
         cyclesChild.append(dateChild, dateOptions)
         dateOptions.appendChild(dateImg)
-        
+
         console.log(this.task.cycle)
         this.task.cycle?.forEach(date => {
             let copy = cyclesChild?.cloneNode(true) as HTMLElement
             copy.firstElementChild!.textContent = date
-            
+
             cycleContainer?.append(copy)
-            
+
         })
         /**
          * TODO: Add the other radchildren:
@@ -349,12 +357,12 @@ export class DOMManager {
          * c. Priority
         */
         let notesElement = document.getElementById("notes") as HTMLParagraphElement
-        if (todo.notes !== undefined) {
-            notesElement.textContent = todo.notes
+        if (this.task!.notes !== undefined) {
+            notesElement.textContent = this.task!.notes
         } else {
             notesElement.textContent = "Add note"
         }
-    
+
     }
     /**
      * A function that is incorporating different subfunctions and eventlisteners to handle the task detail ui and changes 
@@ -526,7 +534,7 @@ export class DOMManager {
             } else if (elem.id.includes("add-priority-")) {
                 this.closeAllSubmenus()
                 document.getElementById("priority-submenu")!.classList.toggle("hidden")
-            } else {
+            } else if (elem.classList.contains("submenus")) {
                 this.closeAllSubmenus()
             }
         })
@@ -537,7 +545,7 @@ export class DOMManager {
         dueBySubmenu?.addEventListener("click", (ev: MouseEvent) => {
             let element = ev.target as HTMLElement
             if (element.textContent === "Today") {
-                
+
                 console.log("Today clicked")
 
             } else if (element.textContent === "Tomorrow") {
@@ -561,17 +569,18 @@ export class DOMManager {
             if (element.textContent === "daily") {
                 this.task!.repeat = 1
                 this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 1)
-                console.log(this.task!.repeatDate)
+                console.log("The repeat by one day: "+ this.task!.repeatDate)
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
                 this.populateForm(this.task!.title)
+                
             } else if (element.textContent === "weekly") {
                 this.task!.repeat = 7
-                this.task!.repeatDate = new Date()
                 this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 7)
                 console.log(this.task!.repeatDate)
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Monthly") {
                 this.task!.repeat = 28
-                this.task!.repeatDate = new Date()
                 this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 28)
                 console.log(this.task!.repeatDate)
                 this.populateForm(this.task!.title)
@@ -582,7 +591,7 @@ export class DOMManager {
         })
     }
     projectChooseContext() {
-        
+
     }
     cycleSubmenuContext() {
         let series = document.getElementById("series") as HTMLParagraphElement
@@ -610,7 +619,6 @@ export class DOMManager {
         let cyclesContainer = document.getElementById("cycles-container")
         if (cyclesContainer!.childElementCount === 0) cyclesContainer!.style.display = "none";
         else cyclesContainer!.style.display = "block"
-        console.log(" bing bang bahoo")
         cyclesContainer?.addEventListener("click", (ev: MouseEvent) => {
             let target = ev.target as HTMLElement
             cyclesContainer?.removeChild(target)
@@ -622,12 +630,12 @@ export class DOMManager {
         let text = ""
         let timer: string | number | NodeJS.Timeout | undefined
         content.addEventListener("keypress", (e: KeyboardEvent) => {
-            if (content.textContent !== null && content.textContent!=="Add note") {
+            if (content.textContent !== null && content.textContent !== "Add note") {
                 text = content.textContent
 
                 clearTimeout(timer)
 
-                timer = setTimeout(() =>{
+                timer = setTimeout(() => {
                     this.task!.notes = text
                     this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
                 }, 5000)
@@ -696,10 +704,10 @@ export class DOMManager {
     }
     counthiddenSubmenus(): number {
         let submenus = document.getElementsByClassName("submenus");
-        let count =0
+        let count = 0
         for (let i = 0; i < submenus.length; i++) {
             if (submenus[i].classList.contains("hidden")) count++;
 
         } return count;
-    } 
+    }
 }

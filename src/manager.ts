@@ -1,6 +1,6 @@
 
 import { Todo } from "./todos";
-import { addDays } from "date-fns";
+import { addDays, differenceInBusinessDays, differenceInDays, differenceInHours, parse, parseISO } from "date-fns";
 import format from "date-fns/format";
 /**
  * There is StorageManager, but that name is already taken by the libraries.
@@ -77,23 +77,27 @@ export class StorageManaging {
         task.cycle = cycleSinceStart
         this.localStorage.setItem(title, JSON.stringify(task))
     }
-    //how do I manage the date 
-    public handleRepeat(task: Todo, repeat: number) {
-        task.repeatDate = new Date()
-        addDays(task.repeatDate, repeat)
-        console.log(task)
-        this.insertTaskObjectIntoStorage(task.title, task)
-    }
 
-    public calculateRepeat(task:Todo): number {
-        let currentDate = new Date()
-        let leftDays=0
-        if(task.repeatDate !== undefined) {
-            console.log(typeof(task.repeatDate))
-            leftDays = (currentDate.getTime() - task.repeatDate?.getTime()) / (1000*3600*24)
-            console.log(leftDays)
-        }
-        return leftDays;
+    //if the date is 
+    addDaysToRepeat(startDate: Date, repeat: number) {
+        return addDays(startDate, repeat)
     }
+    //Get either the difference in days, if the difference is 0, return calculate
+    calculateDateDifference(startDate: Date, endDate: Date){
+        let a = new Date(startDate.toISOString())
+        let b = new Date(endDate)
+        let resultDay = differenceInDays(b,a)
+        let resultHour = differenceInHours(b,a)
+        if (resultDay > 0 && resultHour > 0) {
+            return `${resultDay} days, ${resultHour%24} hours left`
+        } else if (resultDay <= 0) {
+            return `${resultHour} hours left`
+        } else {
+            return "Done"
+        }
+        
+        
+    }
+    
 }
 
