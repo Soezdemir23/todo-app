@@ -13,9 +13,9 @@ export class Todo {
     cycle;
 
     constructor(
-        title: string, description: string = "", done: boolean = false, dueDate: string = "",
+        title: string, description: string = "", done: boolean = false,
         priority: number = 0, checklist: any = {}, notes?: string | undefined, repeat?: number | undefined, 
-        repeatDate?: Date |undefined, cycle?: string[] | undefined) {
+        repeatDate?: Date |undefined, cycle?: string[] | undefined, dueDate?: Date) {
         this.title = title;
         this.description = description
         this.dueDate = dueDate

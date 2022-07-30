@@ -17,8 +17,8 @@ import AddPriority from './img/priority_high.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
-import { getDate, sub } from 'date-fns'
-import { cy, zhCN } from 'date-fns/locale'
+import { format, getDate, parseISO, sub } from 'date-fns'
+import { cy, el, zhCN } from 'date-fns/locale'
 /**
  * DOMManager manages the I/O and handling of the DOM the user interacts with
  * it takes the values from the forms and input and saves them for the
@@ -238,7 +238,7 @@ export class DOMManager {
     // not done yet, should return a "true" for 
     populateForm(taskname: string) {
         this.task = this.storageManager.getTask(taskname)
-        
+
 
         // get the task title
         let taskTitleAndContent = document.getElementById("task-content") as HTMLParagraphElement
@@ -291,11 +291,11 @@ export class DOMManager {
         let radChildren = document.getElementsByClassName("repeat-add-due-child")
 
         let date = radChildren[2].querySelector("span")
-        if (this.task.dueDate !== "" && this.task.dueDate !== undefined) date!.textContent = this.task!.dueDate?.toString()
+        if (this.task.dueDate !== undefined && this.task.dueDate !== undefined) date!.textContent = format(parseISO(this.task!.dueDate!.toString()), "do MMM yyyy")
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
-        if (this.task.repeat === undefined && this.task.repeatDate === undefined) {  
+        if (this.task.repeat === undefined && this.task.repeatDate === undefined) {
             repeat!.textContent = "Repeat"
         } else {
             repeat!.textContent = this.storageManager.calculateDateDifference(
@@ -303,7 +303,7 @@ export class DOMManager {
                 this.task!.repeatDate! // the date used to subtract from
             );
         }
-        
+
         //added later when I am working on the project class
         let addProject = radChildren[1].querySelector("span")
 
@@ -350,13 +350,7 @@ export class DOMManager {
             cycleContainer?.append(copy)
 
         })
-        /**
-         * TODO: Add the other radchildren:
-         * a. repeat
-         * b. Add Project -> Project name
-         * c. Priority
-        */
-        let notesElement = document.getElementById("notes-content")as HTMLParagraphElement
+        let notesElement = document.getElementById("notes-content") as HTMLParagraphElement
         if (this.task!.notes !== undefined) {
             notesElement.textContent = this.task!.notes
         } else {
@@ -536,7 +530,7 @@ export class DOMManager {
                 document.getElementById("priority-submenu")!.classList.toggle("hidden")
             } else if (elem.classList.contains("submenus") !== false) {
                 this.closeAllSubmenus()
-            } 
+            }
         })
     }
 
@@ -567,21 +561,18 @@ export class DOMManager {
     }
     // TODO: implement the dueBySubmenuContext
     dueByDateSubmenuContext() {
-        let date = document.getElementById("due-by-date-submenu") as HTMLDataElement
-        let timer: string | number | NodeJS.Timeout |undefined
-        date?.addEventListener("click", () => {
-            
-            clearTimeout(timer)
 
-            timer = setTimeout(() => {
-                
-                if (date.value !== "") return 
-
-                else console.log(date.value);this.task!.dueDate = new Date(date.value)
-
-            }, 3000)
+        let datelocal = document.getElementById("due-time") as HTMLDataElement
+        datelocal?.addEventListener("click", () => {
+            console.log("cliked")
+            console.log(datelocal.value)
+            setTimeout(() => {
+                console.log(datelocal.value)
+                this.task!.dueDate =new Date(datelocal.value)
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                this.populateForm(this.task!.title)
+            }, 10000)
         })
-        console.log('Method not implemented.')
     }
     repeatSubmenuContext() {
         let repeatSubmenu = document.getElementById("repeat-submenu")
@@ -590,10 +581,10 @@ export class DOMManager {
             if (element.textContent === "daily") {
                 this.task!.repeat = 1
                 this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 1)
-                console.log("The repeat by one day: "+ this.task!.repeatDate)
+                console.log("The repeat by one day: " + this.task!.repeatDate)
                 this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
                 this.populateForm(this.task!.title)
-                
+
             } else if (element.textContent === "weekly") {
                 this.task!.repeat = 7
                 this.task!.repeatDate = this.storageManager.addDaysToRepeat(new Date(), 7)
@@ -613,6 +604,12 @@ export class DOMManager {
     }
     // TODO: work on the project class and see how I can fit it into the project, then start implementing this.
     projectChooseContext() {
+        let select = document.getElementById("priority-select") as HTMLSelectElement
+        select?.addEventListener("change", () => {
+            console.log(("selecting"));
+            
+
+        })
 
     }
     cycleSubmenuContext() {
@@ -648,7 +645,7 @@ export class DOMManager {
         })
         console.log('Method not implemented.')
     }
-    //TODO: Test the notescontext
+
     notesContext() {
         let content = document.getElementById("notes")
         let text = ""
