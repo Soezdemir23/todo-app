@@ -2,6 +2,7 @@
 import { Todo } from "./todos";
 import { addDays, differenceInBusinessDays, differenceInDays, differenceInHours, parse, parseISO } from "date-fns";
 import format from "date-fns/format";
+import { ProjectList } from "./projects";
 /**
  * There is StorageManager, but that name is already taken by the libraries.
  * It's job is to look for tasks in the background and pass it to the domManager
@@ -95,9 +96,18 @@ export class StorageManaging {
         } else {
             return "Done"
         }
-        
-        
     }
+
+    getProject(project: string): ProjectList | undefined{
+        let list = this.localStorage.getItem(project)
+        if (list == null) return
+     return Object.assign(new ProjectList(), JSON.parse(list))
+    }
+    setProject(project: ProjectList) {
+        this.localStorage.removeItem(project.name)
+        this.localStorage.setItem(project.name, JSON.stringify(project))
+    }
+
     
 }
 
