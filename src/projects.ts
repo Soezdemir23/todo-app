@@ -1,25 +1,18 @@
 import { Todo } from "./todos";
 
-export class Project {
-    private _name: string;
+export class ProjectList {
+    name: string;
 
-    private _todos: Todo[] = [];
+    todos: Todo[] = [];
 
-    constructor(name: string) {
-        this._name = name
-    }
-
-    public get name(): string {
-        return this._name;
-    }
-    public set name(value: string) {
-        this._name = value;
+    constructor(name: string = "", todos: Todo[] = [] ) {
+        this.name = name
+        this.todos = todos
     }
 
-    public get todos() {
-        return this._todos;
-    }
-    public set todos(value) {
-        this._todos = value;
-    }
 }
+
+
+
+
+
