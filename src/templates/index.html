@@ -11,7 +11,7 @@
 <body>
     <!--Settings and where you can see your lists, if screen is too small, whooshes from the left and puts
         the main screen in the background, just slightly-->
-    <section id="lists-container" style="display: none">
+    <section id="lists-container" >
         <!--sticky header-->
     <div class="header">
             <!--Hamburger to close, when screen is smaller-->
@@ -22,22 +22,22 @@
             <!-- tasks and projects-->
             <div id="default-projects-container">
                 <ul>
-                    <li><img id="my-day">My Day</li>
-                    <li><img id="soon-due">Soon Due</li>
-                    <li><img id="planned">Planned</li>
-                    <li><img id="all-tasks">All Tasks</li>
+                    <li id="my-day"><img id="my-day-img" alt="my Day">My Day</li>
+                    <li id="soon-due"><img id="soon-due-img" alt="soon Due" >Soon Due</li>
+                    <li id="planned"><img id="planned-img" alt="Planned">Planned</li>
+                    <li id="all-tasks"><img id="all-tasks-img" alt="all Tasks" >All Tasks</li>
                 </ul>
             </div>
             <!--You can add your current tasks into projects-->
             <div id="custom-projects-container">
-                <ul>
+                <ul id="custom-projects-list">
                     <li>Project</li>
                 </ul>
             </div>
         </div>
         <!--sticky footer-->
-        <div class="footer">
-        <img id="new-list"><p>New List</p>
+        <div class="footer" id="new-list-button">
+            <img id="new-list"><p>New List</p>
         </div>
     </section>
     
@@ -48,7 +48,7 @@
             <!--Hamburger logo, when screen is smaller-->
             <button type="button" onclick="openMenu()">Menu</button>
             <div>
-                <h2>Current List name</h2>
+                <h2 id="list-name">Current List name</h2>
             </div>
         </div>
         <!--If any of the tasks are clicked, create a menu on the right what you would like to change-->
@@ -171,7 +171,7 @@
                 </select>
             </div>
             
-            <div id="cycles-container">
+            <div class="hidden"id="cycles-container">
 
             </div>
     
