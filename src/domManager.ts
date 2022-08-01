@@ -17,8 +17,8 @@ import AddPriority from './img/priority_high.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
-import { format, getDate, parseISO, sub } from 'date-fns'
-import { cy, el, zhCN } from 'date-fns/locale'
+import { format, parseISO } from 'date-fns'
+import { ProjectList } from './projects'
 /**
  * DOMManager manages the I/O and handling of the DOM the user interacts with
  * it takes the values from the forms and input and saves them for the
@@ -31,16 +31,17 @@ export class DOMManager {
 
     constructor(storageManager: StorageManaging) {
         this.storageManager = storageManager
+     //   this.myDay = new P
     }
 
     hookSVGToElements() {
-        let myDayElement = document.getElementById("my-day") as HTMLImageElement
+        let myDayElement = document.getElementById("my-day-img") as HTMLImageElement
         myDayElement.src = MyDay
-        let soonDueElement = document.getElementById("soon-due") as HTMLImageElement
+        let soonDueElement = document.getElementById("soon-due-img") as HTMLImageElement
         soonDueElement.src = SoonDue
-        let plannedElement = document.getElementById("planned") as HTMLImageElement
+        let plannedElement = document.getElementById("planned-img") as HTMLImageElement
         plannedElement.src = Planned
-        let allTaskElement = document.getElementById("all-tasks") as HTMLImageElement
+        let allTaskElement = document.getElementById("all-tasks-img") as HTMLImageElement
         allTaskElement.src = AllTasks
         let newProjectElement = document.getElementById('new-list') as HTMLImageElement
         newProjectElement.src = Project
@@ -97,7 +98,11 @@ export class DOMManager {
                 } else {
                     this.addTaskToToDoListDOM(addTaskInput.value, "not-done")
                     let newTask = new Todo(`${addTaskInput.value}`)
-                    this.storageManager.insertTaskObjectIntoStorage(addTaskInput.value, newTask)
+                    //TODO: this needs to be refactored into manager or projectList class
+                    let project = this.storageManager.getProject(document.getElementById("list-name")?.textContent!)
+                    project?.todos.push(newTask)
+                    this.storageManager.setProject(project!)                    
+                    //this.storageManager.insertTaskObjectIntoStorage(addTaskInput.value, newTask)
                     addTaskInput!.value = ""
                 }
             }
@@ -238,6 +243,19 @@ export class DOMManager {
     // not done yet, should return a "true" for 
     populateForm(taskname: string) {
         this.task = this.storageManager.getTask(taskname)
+        if (this.task === null) {
+            let currentProject: ProjectList = this.storageManager.
+                getProject(document.getElementById("tasks-container")!.
+                getElementsByClassName("header")[0].querySelector("div")!.
+                firstElementChild!.textContent!)!
+            //TODO: This should have been in the ProjectList class. 
+            //But somehow, the functions in that class aren't recognized
+                currentProject.todos.forEach(todo => {
+                if (todo.title === taskname) {
+                    this.task = todo 
+                }
+            })
+            }
 
 
         // get the task title
@@ -313,11 +331,14 @@ export class DOMManager {
                 priority!.textContent = "Low importance [0]"
                 break;
             case 1:
-                priority!.textContent = "medium importance [1]"
+                priority!.textContent = "Medium importance [1]"
+                break;
             case 2:
-                priority!.textContent = "high importance [2]"
+                priority!.textContent = "High importance [2]"
+                break;
             case 3:
-                priority!.textContent = "high importance [3]"
+                priority!.textContent = "Urgent importance [3]"
+                break;
             default:
                 if (this.task!.priority !== undefined) {
                     priority!.textContent = "Set Priority"
@@ -329,6 +350,7 @@ export class DOMManager {
 
         let cycleContainer = document.getElementById("cycles-container")
 
+        cycleContainer?.replaceChildren("")
         let cyclesChild = document.createElement("div")
         cyclesChild.classList.add("cycles-child")
 
@@ -342,7 +364,7 @@ export class DOMManager {
         cyclesChild.append(dateChild, dateOptions)
         dateOptions.appendChild(dateImg)
 
-        console.log(this.task.cycle)
+        
         this.task.cycle?.forEach(date => {
             let copy = cyclesChild?.cloneNode(true) as HTMLElement
             copy.firstElementChild!.textContent = date
@@ -356,7 +378,6 @@ export class DOMManager {
         } else {
             notesElement.textContent = "Add note"
         }
-
     }
     /**
      * A function that is incorporating different subfunctions and eventlisteners to handle the task detail ui and changes 
@@ -370,7 +391,7 @@ export class DOMManager {
         // pass the todo to these, so the relevant information can be adjusted.
         this.taskDescriptionContext()
         this.subtaskListContext()
-        //this.addToMyDayContext()
+        this.addToMyDayContext()
         this.radContext()
         this.dueBySubmenuContext()
         this.dueByDateSubmenuContext()
@@ -510,9 +531,8 @@ export class DOMManager {
     addToMyDayContext() {
         // throw new Error('Method not implemented.')
     }
-    // TODO: Doesn't close when it is clicked outside of the radContext. I haven't solved the logic of this yet.
     radContext() {
-        let screen = document.body
+        let screen = document.getElementById("repeat-add-due-container")
 
         screen?.addEventListener('click', (ev: MouseEvent) => {
             let elem = ev.target as HTMLElement;
@@ -559,7 +579,6 @@ export class DOMManager {
         })
 
     }
-    // TODO: implement the dueBySubmenuContext
     dueByDateSubmenuContext() {
 
         let datelocal = document.getElementById("due-time") as HTMLDataElement
@@ -602,11 +621,13 @@ export class DOMManager {
             }
         })
     }
-    // TODO: work on the project class and see how I can fit it into the project, then start implementing this.
     projectChooseContext() {
         let select = document.getElementById("priority-select") as HTMLSelectElement
         select?.addEventListener("change", () => {
-            console.log(("selecting"));
+            console.log(("selecting:"+ select.options[select.selectedIndex].value));
+            this.task!.priority = parseInt(select.options[select.selectedIndex].value)
+            this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task! )
+            this.populateForm(this.task!.title)
             
 
         })
@@ -634,11 +655,9 @@ export class DOMManager {
             }
         })
     }
-    // TODO: After creating the series, check the status of this element
     cyclesContainerContext() {
         let cyclesContainer = document.getElementById("cycles-container")
-        if (cyclesContainer!.childElementCount === 0) cyclesContainer!.style.display = "none";
-        else cyclesContainer!.style.display = "block"
+
         cyclesContainer?.addEventListener("click", (ev: MouseEvent) => {
             let target = ev.target as HTMLElement
             cyclesContainer?.removeChild(target)
@@ -730,5 +749,51 @@ export class DOMManager {
             if (submenus[i].classList.contains("hidden")) count++;
 
         } return count;
+    }
+
+
+    ProjectListMenu() {
+        let listContainer = document.getElementById("lists-container")
+
+        listContainer?.addEventListener("click", (ev: MouseEvent) => {
+            let target = ev.target as HTMLElement
+            if (document.getElementById("my-day")!.id === target!.id) {
+                console.log("day clicked")
+                // first get the project
+                // then get the console info
+                
+                this.setUpTasksContainer(this.storageManager.getProject("My Day")!)
+            } else if(document.getElementById("soon-due")!.id === target!.id) {
+                console.log("soon-due clicked")
+            } else if(document.getElementById("planned")!.id === target!.id) {
+                console.log("planned clicked")
+            } else if(document.getElementById("all-tasks")!.id === target!.id) {
+                console.log("all-tasks clicked")
+            } else if (document.getElementById("custom-projects-list")!.parentElement!.id === target!.id) {
+                console.log("custom-projects-container clicked");
+                
+            } else if (document.getElementById("new-list-button")!.id === target!.id){
+                console.log("footer clicked")
+            } else {
+                console.log(target);
+                
+            }
+        })
+    }
+    setUpTasksContainer(project: ProjectList) {
+        document.getElementById("tasks-container")!.
+            getElementsByClassName("header")[0].querySelector("div")!.
+            firstElementChild!.textContent = project.name
+        document.getElementById("not-done")?.replaceChildren("")
+        document.getElementById("done")?.replaceChildren("")
+        
+        project.todos.forEach(task => {
+            console.log(task)
+            if (task.done === false){
+                this.addTaskToToDoListDOM(task.title, "not-done")
+            } else {
+                this.addTaskToToDoListDOM(task.title, "done")
+            }
+        })
     }
 }
