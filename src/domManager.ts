@@ -552,7 +552,8 @@ export class DOMManager {
         let closeButton = document.getElementById('close-task-customization')
 
         closeButton?.addEventListener('click', () => {
-            document.getElementById('task-customization')?.classList.toggle("hidden")
+            document.getElementById('task-customization')?.classList.add("hidden")
+            document.getElementById("task-customization")!.style.display = "none"
             this.removeActiveFromButtons()
             this.closeAllSubmenus()
         })
@@ -1012,9 +1013,6 @@ export class DOMManager {
             }
         })
     }
-    drawProjectList() {
-
-    }
 
     addNewProject() {
         let newProjectText = document.getElementById("new-list-content") as HTMLParagraphElement
@@ -1077,5 +1075,23 @@ export class DOMManager {
                 }
             })
         }
+
+
     }
+
+    projectsMenu() {
+        document.getElementById("projects-menu")?.addEventListener("click", () =>{
+            //so a manual toggle now? Really? Okay I guess.
+            if (document.getElementById("lists-container")?.classList.contains("hidden") == false) {
+                document.getElementById("lists-container")!.style.display = "none"
+                document.getElementById("lists-container")?.classList.toggle("hidden")
+
+            } else {
+                document.getElementById("lists-container")!.style.display = "block"
+                document.getElementById("lists-container")?.classList.toggle("hidden")
+
+            }
+        })
+    }
+
 }

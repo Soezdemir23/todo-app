@@ -57,6 +57,9 @@ ul {
 #lists-container .footer imghover {
   background-color: #e0e0e0;
 }
+#lists-container .footer p {
+  flex-grow: 1;
+}
 
 #tasks-container {
   background-color: #687ccc;
@@ -90,6 +93,12 @@ ul {
   display: inline;
   cursor: pointer;
 }
+#tasks-container li #task-delete-button {
+  align-self: flex-end;
+}
+#tasks-container li #task-delete-button img {
+  max-height: 15px;
+}
 #tasks-container .footer div {
   background-color: #e0e0e0;
   display: flex;
@@ -107,6 +116,7 @@ ul {
   text-decoration: line-through;
 }
 #task-parent {
+  display: hidden;
   min-width: 350px;
   max-width: 375px;
   background-color: #272727;
@@ -337,7 +347,6 @@ ul {
   overflow-y: hidden;
 }
 #task-parent .hidden {
-  background-color: #687ccc;
   display: none;
 }
 

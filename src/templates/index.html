@@ -11,11 +11,11 @@
 <body>
     <!--Settings and where you can see your lists, if screen is too small, whooshes from the left and puts
         the main screen in the background, just slightly-->
-    <section id="lists-container" >
+    <section id="lists-container">
         <!--sticky header-->
     <div class="header">
             <!--Hamburger to close, when screen is smaller-->
-            <div><button type="button" onclick="closeMenu()">close</button></div>
+            <div><button type="button" style="display:none;" onclick="closeMenu()">close</button></div>
             <h1>Welcome User!</h1>
     </div>
         <div class="section">
@@ -46,7 +46,7 @@
         <!--sticky header, tells you about your day, gives you access to the left -->
         <div class="header">
             <!--Hamburger logo, when screen is smaller-->
-            <button type="button" onclick="openMenu()">Menu</button>
+            <button id="projects-menu" type="button" >Projects</button>
             <div>
                 <h2 id="list-name">Current List name</h2>
             </div>
@@ -82,14 +82,16 @@
                 <div id="task-description-container">
                     <img id="done-img" alt="">
                     <p contenteditable="true" id="task-content">
-                        
+                        I am a dummy task, I am not saved and will greet you everytime.
+                        You can write the title here. Simply add a double hyphen to add the description.
+                        Example: Title -- description
                     </p>
-                    <img id="favorite" src="grade_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                    <img id="favorite" alt="">
                 </div>
                 <ul id="subtask-list-container">
                     <li id="add-subtask-list">
                         <img alt="add-task-symbol"id="add-subtask-button">
-                        <span contenteditable="true" id="add-subtask-text">Next step</span>
+                        <span contenteditable="true" id="add-subtask-text">Write next step and hit Enter</span>
                     </li>
                 </ul>
             </div>
@@ -177,7 +179,9 @@
     
             <div id="notes">
                 <p id="notes-content" contenteditable="true">
-                    Add note
+                    You can add additional notes here!
+                    Also some buttons don't work, but they do not detract from the usability.
+                    I'll be back.
                 </p>
             </div>
     

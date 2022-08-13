@@ -114,3 +114,4 @@ dom.InitialBoarding("Test")
 }
 dom.addNewProject()
 dom.ProjectListMenu()
+dom.projectsMenu()

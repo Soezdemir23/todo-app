@@ -156,6 +156,7 @@ ul {
 }
 
 #task-parent {
+    display: hidden;
     min-width: 350px;
     max-width: 375px;
     background-color: #272727;
@@ -436,7 +437,6 @@ ul {
 
 
     .hidden {
-        background-color: #687ccc;
         display: none;
     }
 }
