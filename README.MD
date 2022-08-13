@@ -42,8 +42,5 @@ https://soezdemir23.github.io/todo-app/
 
 ## This is half-baked, why have you released it in this state?
 
-This is because the functionality of the app is, functionally provided and I spent an extensive amount of time doing something, for which frameworks exist.
-It exhausted me as I worked on my free time and learned a lot from it.
-But now? I want to carry on and learn how to make these better, when I come back.
-And hopefully this time, in a manner that actually is more fun and ... if you look at the code,
-less prone to errors I felt was outside my control or experience.
+
+The minimum functionality of the app has been provided. I spent an extensive amount of time doing something for which frameworks already exist. This project exhausted me, using all my free time and I learned a lot from it. I want to carry on and learn how to make this better when I come back. Hopefully this time where working on this would be more fun.
