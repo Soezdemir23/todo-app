@@ -14,6 +14,7 @@ import Repeat from './img/event_repeat.svg'
 import AddToProject from './img/perm_media.svg'
 import AddDueDate from './img/edit_calendar.svg'
 import AddPriority from './img/priority_high.svg'
+import Delete from './img/delete.svg'
 
 import { StorageManaging } from './manager'
 import { Todo } from './todos'
@@ -24,14 +25,34 @@ import { ProjectList } from './projects'
  * it takes the values from the forms and input and saves them for the
  * use later for the TaskManager.
  */
+/*TODO: Work slowly through the projects, then replace the tree as required.
+ 1. New List
+ 1.1. check if the new List is in the localstorage and in the list in HTML DONE
+ 1.2. insert tasks and implement a function that checks for duplicate tasks in projects and in localstorage DONE
+ 1.3. refactor the code so it can check for duplicates in projects and localstorage DONE
+ 1.3.1 implement a warning that the user is entering a task with the same name in the project, or the localstorage DONE
+ 1.4. fix the "add to project" part of the app 
+ 1.5. fix the add to my day issue DONE
+ 1.5.1 todos need to start with a myDay to false
+ 1.5.1 add a new property for task to take "My Day" as either true or false
+ 1.5.2 add behavior indicator for "Add to my day", button to display "Added to my day"
+ 1.5.2.1 add a close button for true, to remove it to indicate it's getting removed.
+ 1.6. add remove buttton for tasks
+ 1.7. fix the submenu clearing
+ 1.8. fix the cycle container
+ 1.9. fix the repeat button to repeat the cycle, or wait for a prompt that the user either confirms, or removes the repeat
+ 1.10 fix the add due block to make it able to remove the due date 
+ 2.11 Add a import/export button for the localstorage
+ */
 export class DOMManager {
     task: null | Todo = null;
     storageManager: StorageManaging
     openSubmenus = 6;
+    project: undefined | ProjectList;
 
     constructor(storageManager: StorageManaging) {
         this.storageManager = storageManager
-     //   this.myDay = new P
+        //   this.myDay = new P
     }
 
     hookSVGToElements() {
@@ -87,36 +108,40 @@ export class DOMManager {
     }
     /**
      * Listens to input in the task menu, upon entering "Enter".
-     */
+     * Should do two things:\n 
+     * 1.enter a task, that doesn't exist in projects, then put them into all tasks.
+     * 2.enter a task, that exists in projects
+     * 
+     **/
     readTaskFromDOM() {
         let addTaskInput = document.getElementById("add-task-container")?.querySelector("input")
         addTaskInput?.addEventListener("keypress", (ev: KeyboardEvent) => {
             if (ev.key === "Enter") {
-                if (addTaskInput?.value.length === undefined) return
-                if (addTaskInput?.value.length < 1) {
-                    return
-                } else {
-                    this.addTaskToToDoListDOM(addTaskInput.value, "not-done")
-                    let newTask = new Todo(`${addTaskInput.value}`)
-                    //TODO: this needs to be refactored into manager or projectList class
-                    let project = this.storageManager.getProject(document.getElementById("list-name")?.textContent!)
-                    project?.todos.push(newTask)
-                    this.storageManager.setProject(project!)                    
-                    //this.storageManager.insertTaskObjectIntoStorage(addTaskInput.value, newTask)
-                    addTaskInput!.value = ""
+                // first of all check if the value is not empty
+                if (addTaskInput?.value !== undefined) {
+                    //check if the task is "My Day", "Soon Due", "Planned", "All Tasks"
+                    // if yes, then check if the task exists inside the localstorage
+                    // if not, then the project list needs to be checked if the task exists in the storage
+                    let listName = document.getElementById("list-name")?.textContent
+                    if (listName !== undefined && (listName === "My Day" || listName === "Soon Due" || listName === "Planned" || listName === "All Tasks")) {
+                        if (this.storageManager.getTask(addTaskInput.value) === null || this.storageManager.getTask(addTaskInput.value) === undefined) {
+                            let newTask = new Todo(addTaskInput.value)
+                            newTask.myDay = false
+                            this.storageManager.insertTaskObjectIntoStorage(newTask.title, newTask)
+                        } else {
+                            addTaskInput.value = "Task with same name. Put existing todo into a project, customize it, or remove it."
+                        }
+                    }
                 }
             }
         })
     }
-
-
     addTaskToToDoListDOM(task: string, whichContainer: string) {
         let taskContainer = document.getElementById(`${whichContainer}`)
         let newToDoList = document.createElement("li")
         newToDoList.dataset.name = `${task}`
         newToDoList.innerHTML =
-            `<button data-name="${task}" >+</button>${task}
-        `
+            `<button id="uncover-details" data-name="${task}">+</button>${task} <button id="task-delete-button"><img id="task-delete-image" src="${Delete}"/></button>`
         newToDoList.classList.add("task-child-undone")
         taskContainer?.insertBefore(newToDoList, taskContainer.firstChild)
     }
@@ -127,7 +152,6 @@ export class DOMManager {
         else {
             todos.forEach(todo => {
                 if (todo.done === false) {
-
                     this.addTaskToToDoListDOM(todo.title, "not-done")
                 } else {
                     this.addTaskToToDoListDOM(todo.title, "done")
@@ -140,27 +164,93 @@ export class DOMManager {
         let taskChildrenParent = document.getElementById("tasks-list-container")
         taskChildrenParent?.addEventListener("click", (ev: MouseEvent) => {
             let nodeTarget = ev.target as Node
+            let elemTarget = ev.target as HTMLElement
+
             //if the target in this container clicked is a list, we call it either done, or undone
             if (nodeTarget.nodeName === "LI") {
                 let target = ev.target as HTMLElement
-                if (target.classList.contains("task-child-undone")) {
-                    target.classList.remove("task-child-undone")
-                    target.classList.add("task-child-done")
-                    this.storageManager.changeDone(target.dataset.name!, true)
-                    this.pushToDoneOrUndoneContainer(target, "done")
-
-                } else if (target.classList.contains("task-child-done")) {
-                    target.classList.remove("task-child-done")
-                    target.classList.add("task-child-undone")
-                    this.storageManager.changeDone(target.dataset.name!, false)
-                    target.style.textDecoration = "strikethrough"
-                    this.pushToDoneOrUndoneContainer(target, "not-done")
-                }
-
-            }
-            // the task-name is gone. I need to refactor the conditions below
-            else if (nodeTarget.nodeName === "BUTTON") {
+                if (target.dataset.name != null) {
+                    this.assignThisTask(target.dataset.name)
+                    if (target.parentElement != null)
+                        if (target.parentElement.id === "not-done") {
+                            if (this.task?.belongsToProject == "") {
+                                this.task.done = true
+                                this.storageManager.insertTaskObjectIntoStorage(this.task.title, this.task)
+                                this.pushToDoneOrUndoneContainer(target, "done")
+                            } else {
+                                // get the current project by getting the belongstoprojeect property value, then change the task done to false, then put the new change intot the project, 
+                                // then after the update is in the storage, push the element into the other ul
+                                let project = this.storageManager.getProjectFromLocalStorage(this.task?.belongsToProject!)
+                                console.log("before change with projectname:", this.task);
+                                this.task!.done = true
+                                console.log("after change with projectname:", this.task);
+                            
+                                this.storageManager.replaceTaskInProject(project!, this.task!)
+                                this.pushToDoneOrUndoneContainer(target, "done")
+                            }
+                        } else if (target.parentElement.id === "done") {
+                            if (this.task?.belongsToProject == "") {
+                                this.task.done = false
+                                console.log(this.task)
+                                this.storageManager.insertTaskObjectIntoStorage(this.task.title, this.task)
+                                this.pushToDoneOrUndoneContainer(target, "not-done")
+                            } else {
+                                // get the current project by getting the belongstoprojeect property value, then change the task done to false, then put the new change intot the project, 
+                                // then after the update is in the storage, push the element into the other ul
+                                let project = this.storageManager.getProjectFromLocalStorage(this.task?.belongsToProject!)
+                                console.log("before change with projectname:", this.task);
+                                this.task!.done = false
+                                console.log("after change with projectname:", this.task);
+                                this.storageManager.replaceTaskInProject(project!, this.task!)
+                                this.pushToDoneOrUndoneContainer(target, "not-done") 
+                            }
+                        }
+                } else console.log("Dataset Name shouldn't be null, we have a problem houston")
+            } else if (nodeTarget.nodeName === "BUTTON" && elemTarget.id == "uncover-details") {
                 this.taskButtonContext(ev)
+            } else if (nodeTarget.nodeName === "BUTTON" && elemTarget.id == "task-delete-button" || elemTarget.id == "task-delete-image") {
+                if (elemTarget.id == "task-delete-button") {
+                    console.log("button", elemTarget.parentElement?.dataset.name)
+                    this.populateForm(elemTarget.parentElement?.dataset.name!)
+                    if (this.task?.belongsToProject === "") {
+                        this.storageManager.removeTaskOrProject(this.task.title)
+                        elemTarget.parentElement?.parentElement?.removeChild(elemTarget.parentElement)
+                    } else {
+                        console.log(this.task?.belongsToProject)
+                        let project = this.storageManager.getProjectFromLocalStorage(this.task!.belongsToProject)
+                        console.log("our project:", project)
+                        // remove it from ui first before you remove it from localstorage
+
+                        for (let i = 0; i < project!.todos.length!; i++) {
+                            if (project!.todos[i].title === this.task?.title) {
+                                project!.todos.splice(i, 1)
+                            }
+                        }
+                        this.storageManager.setProjectIntoLocalStorage(project!)
+                    }
+                } else if (elemTarget.id == "task-delete-image") { // remove the tasks either within the project or the localstorage. By checking the task.belongsToProject. 
+                    // if it is not in any project, removal is simple. If not, we need to go deeper into the project 
+                    console.log("image", elemTarget.parentElement?.parentElement?.dataset.name)
+                    this.populateForm(elemTarget.parentElement?.parentElement?.dataset.name!)
+                    if (this.task?.belongsToProject === "") {
+                        this.storageManager.removeTaskOrProject(this.task.title)
+                    } else {
+                        console.log(this.task?.belongsToProject)
+                        let project = this.storageManager.getProjectFromLocalStorage(this.task!.belongsToProject)
+                        console.log("our project", project)
+                        for (let i = 0; i < project?.todos.length!; i++) {
+                            if (project!.todos[i].title === this.task?.title) {
+                                project!.todos.splice(i, 1)
+                            }
+                        }
+                        this.storageManager.setProjectIntoLocalStorage(project!)
+                    }
+                } else {
+                    console.log("fucked")
+
+                }
+            } else {
+                console.log("outside of scope: ", elemTarget)
             }
         })
     }
@@ -213,7 +303,7 @@ export class DOMManager {
 
             }
         } else {
-            console.log("Something is wrong with the function taskButtonContext")
+            console.log("something went wrong in taskButtoncontext: ", target)
         }
     }
 
@@ -240,22 +330,9 @@ export class DOMManager {
     pushToDoneOrUndoneContainer(target: HTMLElement, id: string) {
         document.getElementById(id)?.append(target)
     }
-    // not done yet, should return a "true" for 
+    // How can I rewrite this in typescript without first using an exclamtion mark and THEN write the condition? This sucks.
     populateForm(taskname: string) {
-        this.task = this.storageManager.getTask(taskname)
-        if (this.task === null) {
-            let currentProject: ProjectList = this.storageManager.
-                getProject(document.getElementById("tasks-container")!.
-                getElementsByClassName("header")[0].querySelector("div")!.
-                firstElementChild!.textContent!)!
-            //TODO: This should have been in the ProjectList class. 
-            //But somehow, the functions in that class aren't recognized
-                currentProject.todos.forEach(todo => {
-                if (todo.title === taskname) {
-                    this.task = todo 
-                }
-            })
-            }
+        this.assignThisTask(taskname)
 
 
         // get the task title
@@ -306,14 +383,20 @@ export class DOMManager {
             }
         }
 
+        let myDay = document.getElementById("add-to-my-day-text")
+        if (myDay !== null && this.task!.myDay === true) {
+            myDay.textContent = "Added to my Day"
+        } else {
+            myDay!.textContent = "Add to my Day"
+        }
         let radChildren = document.getElementsByClassName("repeat-add-due-child")
 
         let date = radChildren[2].querySelector("span")
-        if (this.task.dueDate !== undefined && this.task.dueDate !== undefined) date!.textContent = format(parseISO(this.task!.dueDate!.toString()), "do MMM yyyy")
+        if (this.task!.dueDate !== undefined && this.task!.dueDate !== undefined) date!.textContent = format(parseISO(this.task!.dueDate!.toString()), "do MMM yyyy")
         else date!.textContent = "Add due date"
 
         let repeat = radChildren[0].querySelector("span")
-        if (this.task.repeat === undefined && this.task.repeatDate === undefined) {
+        if (this.task!.repeat === undefined && this.task!.repeatDate === undefined) {
             repeat!.textContent = "Repeat"
         } else {
             repeat!.textContent = this.storageManager.calculateDateDifference(
@@ -324,6 +407,11 @@ export class DOMManager {
 
         //added later when I am working on the project class
         let addProject = radChildren[1].querySelector("span")
+        if (this.task?.belongsToProject != "" ){
+            addProject!.textContent = this.task!.belongsToProject
+        } else {
+            addProject!.textContent = "Add to Project"
+        }
 
         let priority = radChildren[3].querySelector("span")
         switch (this.task!.priority) {
@@ -348,6 +436,15 @@ export class DOMManager {
                 break;
         }
 
+        this.refreshCycles()
+        let notesElement = document.getElementById("notes-content") as HTMLParagraphElement
+        if (this.task!.notes !== undefined) {
+            notesElement.textContent = this.task!.notes
+        } else {
+            notesElement.textContent = "Add note"
+        }
+    }
+    private refreshCycles() {
         let cycleContainer = document.getElementById("cycles-container")
 
         cycleContainer?.replaceChildren("")
@@ -364,21 +461,38 @@ export class DOMManager {
         cyclesChild.append(dateChild, dateOptions)
         dateOptions.appendChild(dateImg)
 
-        
-        this.task.cycle?.forEach(date => {
+
+        this.task!.cycle?.forEach(date => {
             let copy = cyclesChild?.cloneNode(true) as HTMLElement
             copy.firstElementChild!.textContent = date
 
             cycleContainer?.append(copy)
 
         })
-        let notesElement = document.getElementById("notes-content") as HTMLParagraphElement
-        if (this.task!.notes !== undefined) {
-            notesElement.textContent = this.task!.notes
-        } else {
-            notesElement.textContent = "Add note"
+    }
+
+    private assignThisTask(taskname: string) {
+        this.task = this.storageManager.getTask(taskname)
+        if (this.task === null) {
+
+            let currentProject: ProjectList = this.storageManager.
+                getProjectFromLocalStorage(document.getElementById("list-name")?.textContent!)!
+
+            if (currentProject === undefined) { // there was no definitive project saved, only planned, due or all tasks.
+                this.task = this.storageManager.crawlForTodo(taskname)!
+
+            } else {
+                //TODO: This should have been in the ProjectList class. 
+                //But somehow, the functions in that class aren't recognized
+                currentProject.todos.forEach(todo => {
+                    if (todo.title === taskname) {
+                        this.task = todo
+                    }
+                })
+            }
         }
     }
+
     /**
      * A function that is incorporating different subfunctions and eventlisteners to handle the task detail ui and changes 
      * in the background, passing or loading these from the storageManager instance.
@@ -396,10 +510,40 @@ export class DOMManager {
         this.dueBySubmenuContext()
         this.dueByDateSubmenuContext()
         this.repeatSubmenuContext()
-        this.projectChooseContext()
+        this.prioritySelectContext()
+        this.projectListContext()
         this.cycleSubmenuContext()
         this.cyclesContainerContext()
         this.notesContext()
+    }
+    projectListContext() {
+        let selectParent = document.getElementById("select-project-parent") as HTMLSelectElement;
+        
+        selectParent?.addEventListener("change", () => {
+            console.log("showing selected project: ",selectParent.options[selectParent.selectedIndex])
+            // project is ""
+            if (this.task?.belongsToProject === "")  {
+                this.task!.belongsToProject = selectParent.options[selectParent.selectedIndex].value
+            } else {
+                let project = this.storageManager.getProjectFromLocalStorage(this.task?.belongsToProject!)
+                //remove the todo from project's todo property via splice
+                for (let i = 0; i < project!.todos.length; i++) {
+                    if (this.task!.title === project!.todos[i].title ) {
+                        project?.todos.splice(i, 1)
+                    }
+                }
+                this.storageManager.setProjectIntoLocalStorage(project!)
+                // get the current new task in
+                this.task!.belongsToProject =selectParent.options[selectParent.selectedIndex].value
+                if (this.task!.belongsToProject === "") { // pull it out again
+                    this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                } else { // pull it into another project
+                   let project = this.storageManager.getProjectFromLocalStorage(selectParent.options[selectParent.selectedIndex].value)
+                    project?.todos.push(this.task!)
+                    this.storageManager.setProjectIntoLocalStorage(project!)
+                }
+            }
+        })
     }
     /**
      * Simply closes the task details menu
@@ -529,8 +673,39 @@ export class DOMManager {
     }
     // later when the project class is defined and the testing works
     addToMyDayContext() {
-        // throw new Error('Method not implemented.')
+        let myDay = document.getElementById("add-to-my-day-container")
+        myDay?.addEventListener("click", () => {
+            console.log("clicked");
+            console.log();
+
+            if (this.task?.myDay === true) {
+                document.getElementById("add-to-my-day-text")!.textContent = "Add to my Day"
+                document.getElementById("add-to-my-day-cross")?.classList.add("hidden")
+                this.task!.myDay = false;
+
+                console.log("this triggered: true");
+                if (this.task.belongsToProject === "") {
+                    this.storageManager.insertTaskObjectIntoStorage(this.task.title, this.task)
+                } else {
+                    let p = this.storageManager.getProjectFromLocalStorage(this.task.belongsToProject)
+                    this.storageManager.replaceTaskInProject(p!, this.task)
+                }
+            } else {
+                document.getElementById("add-to-my-day-text")!.textContent = "Added to my Day"
+                document.getElementById("add-to-my-day-cross")?.classList.remove("hidden")
+                this.task!.myDay = true;
+                if (this.task!.belongsToProject === "") {
+                    this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                } else {
+                    let p = this.storageManager.getProjectFromLocalStorage(this.task!.belongsToProject)
+                    this.storageManager.replaceTaskInProject(p!, this.task!)
+                }
+                console.log("this triggered: false");
+
+            }
+        })
     }
+
     radContext() {
         let screen = document.getElementById("repeat-add-due-container")
 
@@ -560,7 +735,10 @@ export class DOMManager {
             let element = ev.target as HTMLElement
             if (element.textContent === "Today") {
                 this.task!.dueDate = new Date()
-                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+             
+                let project = this.storageManager.getProjectFromLocalStorage(document.getElementById("list-name")?.textContent!)
+                project?.todos.push(this.task!)
+                this.storageManager.setProjectIntoLocalStorage(project!)
                 this.populateForm(this.task!.title)
             } else if (element.textContent === "Tomorrow") {
                 console.log("Tomorrow clicked")
@@ -587,7 +765,7 @@ export class DOMManager {
             console.log(datelocal.value)
             setTimeout(() => {
                 console.log(datelocal.value)
-                this.task!.dueDate =new Date(datelocal.value)
+                this.task!.dueDate = new Date(datelocal.value)
                 this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
                 this.populateForm(this.task!.title)
             }, 10000)
@@ -621,18 +799,40 @@ export class DOMManager {
             }
         })
     }
-    projectChooseContext() {
+    prioritySelectContext() {
+        this.refreshProjectList()
+
         let select = document.getElementById("priority-select") as HTMLSelectElement
+
         select?.addEventListener("change", () => {
-            console.log(("selecting:"+ select.options[select.selectedIndex].value));
+            console.log(("selecting:" + select.options[select.selectedIndex].value));
             this.task!.priority = parseInt(select.options[select.selectedIndex].value)
-            this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task! )
-            this.populateForm(this.task!.title)
-            
+            if (this.task!.belongsToProject != "") {
+                let project = this.storageManager.getProjectFromLocalStorage(this.task!.belongsToProject!)
+                this.storageManager.replaceTaskInProject(project!, this.task!)
+            } else {
+                this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+            }
 
         })
 
     }
+    private refreshProjectList() {
+        let parent = document.getElementById("select-project-parent")
+        parent?.replaceChildren("", )
+        let option = document.createElement("option") as HTMLOptionElement
+        option.value = "select-project"
+        option.textContent = "select-project"
+        parent?.appendChild(option)
+        this.storageManager.getProjectNames().forEach(project => {
+            let option = document.createElement("option")
+            option.textContent = project
+            option.value = project
+            parent?.appendChild(option)
+
+        })
+    }
+
     cycleSubmenuContext() {
         let series = document.getElementById("series") as HTMLParagraphElement
         let cycleStart = document.getElementById("cycle-time") as HTMLDataElement
@@ -644,11 +844,15 @@ export class DOMManager {
 
 
                     date = new Date(cycleStart.value);
-                    console.log(date)
-                    this.storageManager.handleCycle(this.task!.title, series.textContent, date)
+                    console.log(this.task?.title, series.textContent, date) 
+                    //WARNING: wouldn't it be better to pass the whole task variable?
+                    // simply send the object, then handle the cycle in that object, then either by the way if it is in a project or not, replace it
+                    // no need for more stupid shit like this.
+                    this.storageManager.handleCycle(this.task!, series.textContent, date)
                     series.textContent = "Check the dates below this menu"
                     this.closeAllSubmenus()
-
+                    document.getElementById("event-repeat-span")!.textContent = "Add a Date"
+                    this.refreshCycles()
                 } else {
                     series.textContent = "There has been an error, please enter numbers, seperated by commas"
                 }
@@ -672,13 +876,19 @@ export class DOMManager {
         content?.addEventListener("keypress", (e: KeyboardEvent) => {
             if (content?.textContent !== null && content?.textContent !== "Add note") {
                 text = content!.textContent
-
                 clearTimeout(timer)
 
                 timer = setTimeout(() => {
-                    this.task!.notes = text
-                    this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
-                }, 5000)
+                    if (this.task?.belongsToProject == ""){
+                        this.task!.notes = text.trim()
+                        this.storageManager.insertTaskObjectIntoStorage(this.task!.title, this.task!)
+                    } else {
+                        this.task!.notes = text.trim()
+                        this.storageManager.replaceTaskInProject(
+                            this.storageManager.getProjectFromLocalStorage(this.task?.belongsToProject!)!, this.task!
+                            )
+                    }
+                }, 1000)
             }
         })
         console.log('Method not implemented.')
@@ -751,49 +961,121 @@ export class DOMManager {
         } return count;
     }
 
-
+    InitialBoarding(projectname: string) {
+        this.project = this.storageManager.getProjectFromLocalStorage(projectname);
+        this.setUpTasksContainer(this.project!);
+    }
     ProjectListMenu() {
+
+        console.log(this.storageManager.getProjectNames())
+        this.storageManager.getProjectNames().forEach(title => {
+            let list = document.createElement("li")
+            list.textContent = title
+            list.dataset.name = title
+
+            let removeButton = document.createElement("button")
+            let removeSymbol = document.createElement("img")
+            removeSymbol.src = Delete
+
+            document.getElementById("custom-projects-list")?.appendChild(list)
+            list.appendChild(removeButton)
+            removeButton.appendChild(removeSymbol)
+        })
         let listContainer = document.getElementById("lists-container")
 
         listContainer?.addEventListener("click", (ev: MouseEvent) => {
             let target = ev.target as HTMLElement
             if (document.getElementById("my-day")!.id === target!.id) {
-                console.log("day clicked")
-                // first get the project
-                // then get the console info
+                this.setUpTasksContainer(this.storageManager.getMyDayTodos(), "My Day");
+            } else if (document.getElementById("soon-due")!.id === target!.id) {
+                this.setUpTasksContainer(this.storageManager.soonDueTaks(), "Soon Due")
+            } else if (document.getElementById("planned")!.id === target!.id) {
                 
-                this.setUpTasksContainer(this.storageManager.getProject("My Day")!)
-            } else if(document.getElementById("soon-due")!.id === target!.id) {
-                console.log("soon-due clicked")
-            } else if(document.getElementById("planned")!.id === target!.id) {
-                console.log("planned clicked")
-            } else if(document.getElementById("all-tasks")!.id === target!.id) {
+                this.setUpTasksContainer(this.storageManager.plannedTasks(), "Planned")
+            } else if (document.getElementById("all-tasks")!.id === target!.id) {
+
                 console.log("all-tasks clicked")
-            } else if (document.getElementById("custom-projects-list")!.parentElement!.id === target!.id) {
-                console.log("custom-projects-container clicked");
-                
-            } else if (document.getElementById("new-list-button")!.id === target!.id){
-                console.log("footer clicked")
+                this.setUpTasksContainer(this.storageManager.allTasks())
+            } else if (target.dataset.name != null) {
+                this.project = this.storageManager.getProjectFromLocalStorage(target.dataset.name)
+                this.setUpTasksContainer(this.project!)
+
+            } else if (target.parentElement?.parentElement?.dataset.name != null) {
+                document.getElementById("custom-projects-list")?.removeChild(target.parentElement.parentElement)
+                this.storageManager.removeTaskOrProject(target.parentElement.parentElement.dataset.name!)
+                this.setUpTasksContainer(this.storageManager.allTasks())
+                if (document.getElementById("custom-projects-list")?.childElementCount === 0) {
+
+                }
             } else {
-                console.log(target);
-                
+                console.log(target.parentElement?.parentElement)
             }
         })
     }
-    setUpTasksContainer(project: ProjectList) {
-        document.getElementById("tasks-container")!.
-            getElementsByClassName("header")[0].querySelector("div")!.
-            firstElementChild!.textContent = project.name
-        document.getElementById("not-done")?.replaceChildren("")
-        document.getElementById("done")?.replaceChildren("")
-        
-        project.todos.forEach(task => {
-            console.log(task)
-            if (task.done === false){
-                this.addTaskToToDoListDOM(task.title, "not-done")
-            } else {
-                this.addTaskToToDoListDOM(task.title, "done")
+    drawProjectList() {
+
+    }
+
+    addNewProject() {
+        let newProjectText = document.getElementById("new-list-content") as HTMLParagraphElement
+        newProjectText.addEventListener("keypress", (ev: KeyboardEvent) => {
+            if (ev.key === "Enter" && newProjectText.textContent!.length > 0) {
+                ev.preventDefault()
+                let count = 0;
+                this.storageManager.getProjectNames().forEach(title => {
+                    if (title == newProjectText.textContent?.trim()) count++
+                })
+                if (count > 0) newProjectText.textContent = "You tried adding a duplicate!"
+                else {
+                    let newProject = new ProjectList(newProjectText.textContent!)
+                    let newList = document.createElement("li")
+                    newList.textContent = newProject.name
+                    let removeButton = document.createElement("button")
+                    let removeSymbol = document.createElement("img")
+                    removeSymbol.src = Delete
+                    newList.dataset.name = newProjectText.textContent!
+                    document.getElementById("custom-projects-list")?.appendChild(newList)
+                    newList.appendChild(removeButton)
+                    removeButton.appendChild(removeSymbol)
+                    this.storageManager.setProjectIntoLocalStorage(newProject)
+                    this.refreshProjectList()
+                }
             }
         })
+    }
+
+
+
+    setUpTasksContainer(project: ProjectList | Todo[], title= "") {
+        if (project instanceof ProjectList) {
+            document.getElementById("tasks-container")!.
+                getElementsByClassName("header")[0].querySelector("div")!.
+                firstElementChild!.textContent = project.name
+
+            document.getElementById("not-done")?.replaceChildren("")
+            document.getElementById("done")?.replaceChildren("")
+
+            project.todos.forEach(task => {
+                if (task.done === false) {
+                    this.addTaskToToDoListDOM(task.title, "not-done")
+                } else {
+                    this.addTaskToToDoListDOM(task.title, "done")
+                }
+            })
+        } else {
+            document.getElementById("tasks-container")!.
+                getElementsByClassName("header")[0].querySelector("div")!.
+                firstElementChild!.textContent = title
+
+            document.getElementById("not-done")?.replaceChildren("")
+            document.getElementById("done")?.replaceChildren("")
+            project.forEach(task => {
+                if (task.done === false) {
+                    this.addTaskToToDoListDOM(task.title, "not-done")
+                } else {
+                    this.addTaskToToDoListDOM(task.title, "done")
+                }
+            })
+        }
     }
 }

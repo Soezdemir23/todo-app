@@ -1,13 +1,15 @@
 @import url('./_normalize.scss');
+
 @font-face {
     font-family: 'NotoSans';
     src: url('../font/NotoSans-Light.ttf');
 
 }
+
 // in general, the whole app is flexed
 body {
     height: 100vh;
-    display: flex ;
+    display: flex;
     font-family: 'NotoSans', sans-serif;
 }
 
@@ -23,31 +25,36 @@ ul {
     flex-direction: column;
     background-color: #f3f3f3;
     min-width: 280px;
+
     .section {
-        overflow:auto;
+        overflow: auto;
         flex-grow: 1;
     }
+
     ul {
         display: flex;
         flex-direction: column;
         gap: 1px;
+
         li {
             position: relative;
             right: 30px;
             display: flex;
             align-items: center;
+
             &:hover {
                 background-color: #e0e0e0;
             }
         }
 
     }
+
     img {
         padding-right: 1rem;
         width: 15px;
     }
 
-    #default-projects-container{
+    #default-projects-container {
         border-bottom: #e0e0e0 2px solid;
     }
 
@@ -55,37 +62,47 @@ ul {
         display: flex;
         align-items: center;
         gap: 5px;
+
         img {
             position: relative;
             left: 10px;
             top: 1px;
+
             &hover {
                 background-color: #e0e0e0;
             }
+        }
+
+        p {
+            flex-grow: 1;
         }
 
     }
 
 }
 
-#tasks-container{
+#tasks-container {
     background-color: #687ccc;
     flex-grow: 1;
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
+
     .header {
         h2 {
             color: #fff;
         }
     }
+
     .section {
         flex-grow: 1;
     }
+
     ul {
         display: flex;
         flex-direction: column;
         gap: 2px;
     }
+
     li {
         background-color: #f3f3f3;
         position: relative;
@@ -93,12 +110,22 @@ ul {
         display: flex;
         border-radius: 3px;
         gap: 4px;
-        &active{
+
+        &active {
             background-color: #ffffff;
         }
+
         p {
             display: inline;
             cursor: pointer;
+        }
+
+        #task-delete-button {
+            align-self: flex-end;
+            img {
+                max-height: 15px;
+
+            }
         }
     }
 
@@ -108,22 +135,24 @@ ul {
             display: flex;
             position: relative;
             bottom: 15px;
+
             img {
                 width: 25px;
             }
-            
+
         }
     }
-    .task-child-done{
+
+    .task-child-done {
         color: grey;
         text-decoration: line-through;
     }
+
     #done {
         text-decoration: line-through;
     }
-    .task-child-undone{
-        
-    }
+
+    .task-child-undone {}
 }
 
 #task-parent {
@@ -141,23 +170,26 @@ ul {
         width: 25px;
         height: 25px;
     }
+
     ul {
         position: relative;
         bottom: 70px;
         list-style-type: none;
-        
+
     }
+
     li {
         display: flex;
-        gap:1rem;
+        gap: 1rem;
         position: relative;
         right: 15px;
     }
-    li > img {
+
+    li>img {
         position: relative;
         bottom: 3px;
     }
-    
+
     li>span {
         flex-grow: 1;
     }
@@ -169,68 +201,73 @@ ul {
         display: flex;
         flex-direction: column;
     }
-    
-    #task-description-container{
+
+    #task-description-container {
         display: flex;
         gap: 1rem;
         margin-bottom: 2rem;
     }
-    
-    #task-description-container > p {
+
+    #task-description-container>p {
         flex-grow: 1;
         position: relative;
         bottom: 20px;
         font-size: 1rem;
     }
-    
-    
+
+
     #subtask-list-container {
         padding: 1rem;
         margin-bottom: -5rem;
     }
+
     #add-subtask-list {
         display: flex;
-        
+
     }
-    #add-subtask-list > span {
+
+    #add-subtask-list>span {
         position: relative;
         right: 0.1rem;
     }
-    
+
     #add-subtask-button {
         filter: invert(46%) sepia(18%) saturate(201%) hue-rotate(161deg) brightness(90%) contrast(92%);
     }
+
     #add-subtask-text {
         filter: invert(35%) sepia(18%) saturate(161%) hue-rotate(161deg) brightness(94%) contrast(92%);
         cursor: text;
     }
-    
+
     .subtask-child {
         display: flex;
         align-items: center;
         gap: 1.5rem;
         max-width: 500px;
         padding: 0.5rem 0rem;
-        }
-    .subtask-child > div {
-        position:relative;
-        
+    }
+
+    .subtask-child>div {
+        position: relative;
+
         flex-grow: 1;
         display: flex;
-        border-bottom: solid 1px #434343 ;
+        border-bottom: solid 1px #434343;
     }
+
     .subdone-img {
         height: 15px;
         width: 15px;
         left: 5px;
     }
-    
-    .subtask-child > div > span{
+
+    .subtask-child>div>span {
         color: #9b9fab;
         flex-grow: 1;
     }
-    
-    
+
+
     #add-to-my-day-container {
         background-color: #323232;
         margin: 0.1rem 0.2rem;
@@ -241,24 +278,26 @@ ul {
         align-items: center;
         gap: 1.2rem;
     }
-    #add-to-my-day-container > img {
+
+    #add-to-my-day-container>img {
         position: relative;
         left: 0.2rem;
         width: 20px;
         height: 20px;
         filter: invert(35%) sepia(18%) saturate(161%) hue-rotate(161deg) brightness(94%) contrast(92%);
-    
+
     }
-    
-    #add-to-my-day-container > div {
+
+    #add-to-my-day-container>div {
         display: flex;
         flex-grow: 1;
     }
+
     #add-to-my-day-text {
         flex-grow: 1;
         color: #9b9fab;
     }
-    
+
     #repeat-add-due-container {
         background-color: #323232;
         margin: 0.1rem 0.2rem;
@@ -270,31 +309,36 @@ ul {
         gap: 10px;
         cursor: default;
     }
-    
+
     .repeat-add-due-child {
         display: flex;
         gap: 1.2rem;
     }
-    .repeat-add-due-child > img {
+
+    .repeat-add-due-child>img {
         width: 20px;
         height: 20px;
         position: relative;
         left: 0.2rem;
     }
-    
-    .repeat-add-due-child > span {
+
+    .repeat-add-due-child>span {
         position: relative;
-        flex-grow: 1; 
+        flex-grow: 1;
     }
+
     .repeat-add-due-child:first-child {
-       border-bottom: #9b9fab solid 1px;
-    }
-    .repeat-add-due-child:nth-child(2) { 
         border-bottom: #9b9fab solid 1px;
     }
+
+    .repeat-add-due-child:nth-child(2) {
+        border-bottom: #9b9fab solid 1px;
+    }
+
     .repeat-add-due-child:nth-child(3) {
         border-bottom: #9b9fab solid 1px;
-    }        
+    }
+
     #cycles-container {
         z-index: 0;
         display: flex;
@@ -305,16 +349,17 @@ ul {
         padding: 1rem;
         flex-direction: column;
     }
+
     .cycles-child {
-        display:flex;
+        display: flex;
     }
-    
+
     .date-child {
         flex-grow: 1;
         position: relative;
         left: 2.4rem;
     }
-    
+
     #notes {
         display: flex;
         background-color: #323232;
@@ -323,27 +368,30 @@ ul {
         position: relative;
         top: 2.4rem;
     }
-    
-    #notes > p {
+
+    #notes>p {
         position: relative;
         bottom: 15px;
         margin-bottom: -1rem;
-    } 
-    
+    }
+
     #due-by-submenu {
         position: absolute;
         z-index: 1;
         border: 1px solid white;
-        
+
         background-color: #323232;
     }
-    #due-by-submenu > div {
+
+    #due-by-submenu>div {
         border-bottom: solid 1px #9b9fab;
         padding: 0.5rem 0;
     }
-    #due-by-submenu > div:hover{
+
+    #due-by-submenu>div:hover {
         background-color: #434343;
     }
+
     #due-by-date-submenu {
         position: absolute;
         z-index: 1;
@@ -351,6 +399,7 @@ ul {
         background-color: #323232;
         border: 1px solid white;
     }
+
     #project-choose {
         position: absolute;
         z-index: 1;
@@ -358,7 +407,7 @@ ul {
         border: 1px white solid;
         padding: 1rem;
     }
-    
+
     #cycle-container {
         max-width: 290px;
         position: absolute;
@@ -366,27 +415,28 @@ ul {
         background-color: #323232;
         border: 1px solid white;
     }
-    
-    #repeat-submenu{
+
+    #repeat-submenu {
         z-index: 1;
         position: absolute;
         background-color: #323232;
         border: solid 1px white;
     }
+
     #priority-submenu {
-        z-index:1;
+        z-index: 1;
         position: absolute;
         background-color: #323232;
         border: solid 1px white;
     }
+
     .submenus {
         overflow-y: hidden;
     }
 
-    
-.hidden{
-    background-color: #687ccc;
-    display: none;
-}
-}
 
+    .hidden {
+        background-color: #687ccc;
+        display: none;
+    }
+}

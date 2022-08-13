@@ -103,6 +103,9 @@ ul {
   color: grey;
   text-decoration: line-through;
 }
+#tasks-container #done {
+  text-decoration: line-through;
+}
 #task-parent {
   min-width: 350px;
   max-width: 375px;
@@ -288,7 +291,6 @@ ul {
   position: absolute;
   z-index: 1;
   border: 1px solid white;
-  padding: 1rem;
   background-color: #323232;
 }
 #task-parent #due-by-submenu > div {
@@ -313,6 +315,7 @@ ul {
   padding: 1rem;
 }
 #task-parent #cycle-container {
+  max-width: 290px;
   position: absolute;
   z-index: 1;
   background-color: #323232;
@@ -330,8 +333,11 @@ ul {
   background-color: #323232;
   border: solid 1px white;
 }
-
-.hidden {
+#task-parent .submenus {
+  overflow-y: hidden;
+}
+#task-parent .hidden {
+  background-color: #687ccc;
   display: none;
 }
 

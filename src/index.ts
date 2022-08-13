@@ -18,12 +18,12 @@ dom.readTaskFromDOM()
 dom.listContext()
 dom.formContext()
 dom.redrawSubmenus()
-dom.ProjectListMenu()
 //dom.populateSubtask()
 // this was instantiated and since the task variable was zero, it didn't work so well
-if (localStorage.getItem("My Day") === null) {
-    localStorage.setItem("My Day", JSON.stringify({
-        "name": "My Day",
+
+if (localStorage.getItem("Test") === null) {
+    localStorage.setItem("Test", JSON.stringify({
+        "name": "Test",
         "todos": [
             {
                 "title": "coralla",
@@ -40,7 +40,9 @@ if (localStorage.getItem("My Day") === null) {
                     "10th October 2022",
                     "28th August 2022"
                 ],
-                "notes": "We can write notes for you"
+                "myDay": true,
+                "notes": "We can write notes for you",
+                "belongsToProject": "Test"
             },
             {
                 "title": "corallb",
@@ -56,7 +58,11 @@ if (localStorage.getItem("My Day") === null) {
                     "10th August 2022",
                     "10th October 2022",
                     "28th August 2022"
-                ]
+                ],
+                "myDay": true,
+
+                "belongsToProject": "Test"
+
             }, {
                 "title": "corallc",
                 "description": "This is the third todo",
@@ -71,7 +77,11 @@ if (localStorage.getItem("My Day") === null) {
                     "10th August 2022",
                     "10th October 2022",
                     "28th August 2022"
-                ]
+                ],
+                "myDay": true,
+
+                "belongsToProject": "Test"
+
             },
             {
                 "title": "coralld",
@@ -87,9 +97,20 @@ if (localStorage.getItem("My Day") === null) {
                     "10th August 2022",
                     "10th October 2022",
                     "28th August 2022"
-                ]
+                ],
+                "myDay": true,
+
+                "belongsToProject": "Test"
+
             }
         ]
     })
     )
+    
+dom.InitialBoarding("Test")
+}else {
+    dom.setUpTasksContainer(dom.storageManager.allTasks())
+
 }
+dom.addNewProject()
+dom.ProjectListMenu()

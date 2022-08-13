@@ -11,11 +11,12 @@ export class Todo {
     repeat;
     repeatDate;
     cycle;
-
+    belongsToProject
+    myDay;
     constructor(
         title: string, description: string = "", done: boolean = false,
         priority: number = 0, checklist: any = {}, notes?: string | undefined, repeat?: number | undefined, 
-        repeatDate?: Date |undefined, cycle?: string[] | undefined, dueDate?: Date) {
+        repeatDate?: Date |undefined, cycle?: string[] | undefined, dueDate?: Date |undefined, belongsToProject: string ="", myDay = false) {
         this.title = title;
         this.description = description
         this.dueDate = dueDate
@@ -26,6 +27,8 @@ export class Todo {
         this.repeat = repeat
         this.cycle = cycle
         this.repeatDate = repeatDate
+        this.belongsToProject = belongsToProject
+        this.myDay = myDay
     }
     public info() {
         return {
