@@ -3,6 +3,10 @@ A wise man once said:
 You ain't a developer if you haven't created a ToDo App so far.
 Therefore we are creating a Todo App.
 
+
+There it is
+https://soezdemir23.github.io/todo-app/
+
 ## What did you use to make it?
 + Typescript
 + SASS, a preprocessor for CSS
