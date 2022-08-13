@@ -13,31 +13,31 @@
         the main screen in the background, just slightly-->
     <section id="lists-container">
         <!--sticky header-->
-        <div class="header">
+    <div class="header">
             <!--Hamburger to close, when screen is smaller-->
-            <div><button type="button" onclick="closeMenu()">close</button></div>
+            <div><button type="button" style="display:none;" onclick="closeMenu()">close</button></div>
             <h1>Welcome User!</h1>
     </div>
         <div class="section">
             <!-- tasks and projects-->
             <div id="default-projects-container">
                 <ul>
-                    <li><img id="my-day">My Day</li>
-                    <li><img id="soon-due">Soon Due</li>
-                    <li><img id="planned">Planned</li>
-                    <li><img id="all-tasks">All Tasks</li>
+                    <li id="my-day"><img id="my-day-img" alt="my Day">My Day</li>
+                    <li id="soon-due"><img id="soon-due-img" alt="soon Due" >Soon Due</li>
+                    <li id="planned"><img id="planned-img" alt="Planned">Planned</li>
+                    <li id="all-tasks"><img id="all-tasks-img" alt="all Tasks" >All Tasks</li>
                 </ul>
             </div>
             <!--You can add your current tasks into projects-->
             <div id="custom-projects-container">
-                <ul>
-                    <li>Project</li>
+                <ul id="custom-projects-list">
+                    
                 </ul>
             </div>
         </div>
         <!--sticky footer-->
-        <div class="footer">
-        <img id="new-list"><p>New List</p>
+        <div class="footer" id="new-list-button">
+            <img id="new-list"><p id="new-list-content" contenteditable="true">New List</p>
         </div>
     </section>
     
@@ -46,9 +46,9 @@
         <!--sticky header, tells you about your day, gives you access to the left -->
         <div class="header">
             <!--Hamburger logo, when screen is smaller-->
-            <button type="button" onclick="openMenu()">Menu</button>
+            <button id="projects-menu" type="button" >Projects</button>
             <div>
-                <h2>Current List name</h2>
+                <h2 id="list-name">Current List name</h2>
             </div>
         </div>
         <!--If any of the tasks are clicked, create a menu on the right what you would like to change-->
@@ -77,83 +77,27 @@
     <div class="hidden" id="task-customization">
         <!-- click on the radio button, change the title of the task, add subtasks-->
         <section id="task-parent">
-            <span>&Cross;</span>
+            <span id="close-task-customization">&Cross;</span>
             <div id="task-container">
                 <div id="task-description-container">
-    
-                    <img id="done-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg" alt="" srcset="">
-                    <p contenteditable="true" id="done-content">Test the form taking and create a new
-                        todo task from it sadfsfsfsfsfsdfsdf
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas accusantium doloremque accusamus
-                        libero, aut molestiae quidem sunt atque aliquam modi enim incidunt facere quae at temporibus
-                        repellat dolorum deleniti quibusdam.
+                    <img id="done-img" alt="">
+                    <p contenteditable="true" id="task-content">
+                        I am a dummy task, I am not saved and will greet you everytime.
+                        You can write the title here. Simply add a double hyphen to add the description.
+                        Example: Title -- description
                     </p>
-                    <img src="grade_FILL0_wght400_GRAD0_opsz48.svg" alt="">
-    
+                    <img id="favorite" alt="">
                 </div>
                 <ul id="subtask-list-container">
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                        
-                    </li>
-                    
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                    </li>
-                    <li class="subtask-child">
-                        <img class="subdone-img" src="radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.svg">
-                        <div>
-                            <span contenteditable="true">My first subtask</span>
-                            <img class="subtask-options" src="more_vert_FILL0_wght400_GRAD0_opsz48.svg"
-                                alt="subtask-options">
-                        </div>
-                    </li>
-    
-                    <li id="add-subtask-list"><img src="add.svg" alt="add-task-symbol"id="add-subtask-button"><span
-                            contenteditable="true" id="add-subtask-text">Next step</span>
+                    <li id="add-subtask-list">
+                        <img alt="add-task-symbol"id="add-subtask-button">
+                        <span contenteditable="true" id="add-subtask-text">Write next step and hit Enter</span>
                     </li>
                 </ul>
             </div>
     
             <div id="add-to-my-day-container">
-                <img src="sunny_FILL0_wght400_GRAD0_opsz48.svg" alt="myDay">
+                <img id="add-to-my-day-container-image" alt="myDay">
                 <div>
                     <span id="add-to-my-day-text">Add to my day</span>
                     <span id="add-to-my-day-cross">&Cross;</span>
@@ -164,79 +108,80 @@
                 <!--Get submenu and then, if the user clicks at create cycle, open the date-time-container.
                     Place it under the same line as the submenu-->
                 <div class="repeat-add-due-child">
-                    <img src="event_repeat.svg" alt="repeat sign">
-                    <span>Repeat</span>
+                    <img id="event-repeat-image" alt="repeat sign">
+                    <span id="event-repeat-span">Repeat</span>
                 </div>
                 <div class="repeat-add-due-child">
-                    <img src="date_range.svg" alt="add project">
-                    <span>Add to project</span>
+                    <img id="add-to-project-image" alt="add project">
+                    <span id="add-to-project-span" >Add to project</span>
                 </div>
                 <!--Get the due-by-submenu under this.
                     Today, Tomorrow, Next Week, Pick a date
                 -->
                 <div class="repeat-add-due-child">
-                    <img src="remind_me.svg" alt="add due date">
-                    <span>Add due date</span>
+                    <img id="add-due-date-image" alt="add due date">
+                    <span id="add-due-date-span">Add due date</span>
+                </div>
+                <!-- Add the priorities here -->
+                <div class="repeat-add-due-child">
+                    <img id="add-priority-image" alt="add due date">
+                    <span id="add-priority-span">Set Priority</span>
                 </div>
             </div>
     
-            <div id="due-by-submenu">
+            <div class="hidden submenus" id="due-by-submenu">
                 <div>Today</div>
                 <div>Tomorrow</div>
                 <div>Next Week</div>
                 <div>Pick a date</div>
             </div>
             
-            <div id="due-by-date-submenu">
+            <div class="hidden submenus" id="due-by-date-submenu">
                 <p>Enter time and date</p>
                 <input type="datetime-local" name="due-date-time" id="due-time">
             </div>
             
-            <div id="repeat-submenu">
+            <div class="hidden submenus" id="repeat-submenu">
                 <div>daily</div>
                 <div>weekly</div>
                 <div>Monthly</div>
                 <div>Create a cycle</div>
             </div>
             
-            <div id="project-choose">
-                <select aria-label="state">
+            <div class="hidden submenus" id="project-choose">
+                <select id="select-project-parent" aria-label="state">
                     <option value="select-project">select project</option>
-                    <option value="check">check</option>
+                    
                 </select>
             </div>
-    
-            <div id="cycle-container">
-                <p>Enter a series of days. E.g. 3,8,19,25 etc.</p>
-                <p id="series" contenteditable="true">Enter series here</p>
+            
+            <div class="hidden submenus"id="cycle-container">
+                <p>Select a starting date, then give a series of days, then press Enter.<br>E.g. 3,8,19,25 etc.</p>
+                <p id="series" contenteditable="true">Enter series here and press Enter when done</p>
                 <input type="datetime-local" name="cycle-date-time" id="cycle-time">
             </div>
-    
-    
-            <div id="cycles-container">
-                <div class="cycles-child">
-                    <span class="date-child">3rd JAnuary 2023</span>
-                    <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
-                    </span>
-                </div>
-                <div class="cycles-child">
-                    <span class="date-child">3rd JAnuary 2023</span>
-                    <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
-                    </span>
-                </div>
-                <div class="cycles-child">
-                    <span class="date-child">3rd JAnuary 2023</span>
-                    <span class="date-options">
-                        <img src="more_vert_FILL0_wght400_GRAD0_opsz48.svg" alt="date-options">
-                    </span>
-                </div>
+            
+            <div class="hidden submenus" id="priority-submenu">
+                <span>importance</span>
+                <select name="priority" id="priority-select">
+                    <option value="-1">Choose Priority</option>
+                    <option value="0">Low importance [0]</option>
+                    <option value="1">Medium importance [1]</option>
+                    <option value="2">High importance [2]</option>
+                    <option value="3">Urgent importance [3]</option>
+                
+                </select>
+            </div>
+            
+            <div class="hidden"id="cycles-container">
+
             </div>
     
             <div id="notes">
-                <p contenteditable="true">
-                    Add note
+                <p id="notes-content" contenteditable="true">
+                    You can add additional notes here!
+                    Also some buttons don't work, but they do not detract from the usability.
+                    I'll be back.
                 </p>
             </div>
     
