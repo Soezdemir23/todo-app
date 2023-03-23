@@ -1,52 +1,55 @@
-const path = require('path');
-const HTMLWebpackPlugin = require('html-webpack-plugin')
-
+const path = require("path");
+const HTMLWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 module.exports = {
-  entry: './src/index.ts',
+  entry: "./src/index.ts",
   mode: "development",
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
   devServer: {
-    static: './dist',
+    static: "./dist",
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/,
       },
       {
         test: /\.(scss|css)$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
         test: /\.(png|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-        use: ['url-loader']
-      },{
-      test: /\.(svg)$/i,
-      type: 'asset/inline'
+        type: "asset/resource",
+        use: ["url-loader"],
+      },
+      {
+        test: /\.(svg)$/i,
+        type: "asset/inline",
       },
       {
         test: /\.(woff|woff2|ttf)$/i,
-        type: 'asset/resource'
-      }
+        type: "asset/resource",
+      },
     ],
   },
   plugins: [
     new HTMLWebpackPlugin({
       title: "Todo",
-      template: "src/templates/index.html"
-    })
+      template: "src/templates/index.html",
+    }),
+    new FaviconsWebpackPlugin("./src/favicon.ico"),
   ],
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
   },
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    clean: true
-  }, optimization: {
-    runtimeChunk : 'single'
-  }
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    clean: true,
+  },
+  optimization: {
+    runtimeChunk: "single",
+  },
 };
