@@ -42,5 +42,15 @@ https://soezdemir23.github.io/todo-app/
 
 ## This is half-baked, why have you released it in this state?
 
-
 The minimum functionality of the app has been provided. I spent an extensive amount of time doing something for which frameworks already exist. This project exhausted me, using all my free time and I learned a lot from it. I want to carry on and learn how to make this better when I come back. Hopefully this time where working on this would be more fun.
+
+## Addendum
+
+After cloning and installing it to make a quick commit and push it, I encountered an error.
+It required:
+
++ following this guide: https://github.com/nodejs/node-gyp#on-windows 
++ npm install --save-dev node-sass
++ npm update
+
+Please let me know if you had trouble with it. Orr better yet, just use the online version provided above
