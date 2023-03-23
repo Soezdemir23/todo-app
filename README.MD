@@ -53,4 +53,11 @@ It required:
 + npm install --save-dev node-sass
 + npm update
 
-Please let me know if you had trouble with it. Orr better yet, just use the online version provided above
+Please let me know if you had trouble with it. Or better yet, just use the online version provided above
+
+## Addendum 2
+
+After getting the required favicon I realized why I usually don't like to config webpack.
+Thank god it was just a matter of installing a plugin and calling it a day.
+
+MIT Licensed, use it at your own risk.
